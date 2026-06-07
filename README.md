@@ -50,10 +50,10 @@ This architecture is intentionally extensible so future products such as Deliver
 The repository currently provides the production architecture package and implementation blueprint.
 
 1. Clone the repository.
-2. Read [docs/vision.md](/Users/dannyfrancisco/Documents/Open%20Intelligence%20Platform/docs/vision.md) to understand the target market and scope.
-3. Review [docs/architecture.md](/Users/dannyfrancisco/Documents/Open%20Intelligence%20Platform/docs/architecture.md), [docs/security.md](/Users/dannyfrancisco/Documents/Open%20Intelligence%20Platform/docs/security.md), and [docs/deployment.md](/Users/dannyfrancisco/Documents/Open%20Intelligence%20Platform/docs/deployment.md) to align on production design.
-4. Use [docs/repository-structure.md](/Users/dannyfrancisco/Documents/Open%20Intelligence%20Platform/docs/repository-structure.md) and [docs/technology-stack.md](/Users/dannyfrancisco/Documents/Open%20Intelligence%20Platform/docs/technology-stack.md) to scaffold the implementation.
-5. Build incrementally following [docs/roadmap.md](/Users/dannyfrancisco/Documents/Open%20Intelligence%20Platform/docs/roadmap.md).
+2. Read [docs/vision.md](docs/vision.md) to understand the target market and scope.
+3. Review [docs/architecture.md](docs/architecture.md), [docs/security.md](docs/security.md), and [docs/deployment.md](docs/deployment.md) to align on production design.
+4. Use [docs/repository-structure.md](docs/repository-structure.md) and [docs/technology-stack.md](docs/technology-stack.md) to scaffold the implementation.
+5. Build incrementally following [docs/roadmap.md](docs/roadmap.md).
 
 ## Technology Stack
 
@@ -67,7 +67,7 @@ The repository currently provides the production architecture package and implem
 - Observability: `OpenTelemetry`, `Prometheus`, `Grafana`
 - Deployment: `Docker`, `Docker Compose`, `Kubernetes`
 
-Rationale is documented in [docs/technology-stack.md](/Users/dannyfrancisco/Documents/Open%20Intelligence%20Platform/docs/technology-stack.md).
+Rationale is documented in [docs/technology-stack.md](docs/technology-stack.md).
 
 ## Roadmap
 
@@ -78,7 +78,7 @@ Rationale is documented in [docs/technology-stack.md](/Users/dannyfrancisco/Docu
 - Phase 5: Continuous Learning
 - Phase 6: Fine-Tuning Factory
 
-See [docs/roadmap.md](/Users/dannyfrancisco/Documents/Open%20Intelligence%20Platform/docs/roadmap.md) for objectives and deliverables.
+See [docs/roadmap.md](docs/roadmap.md) for objectives and deliverables.
 
 ## Contribution Guide
 
@@ -99,18 +99,18 @@ Recommended contribution flow:
 
 ## Repository Documents
 
-- [docs/vision.md](/Users/dannyfrancisco/Documents/Open%20Intelligence%20Platform/docs/vision.md)
-- [docs/architecture.md](/Users/dannyfrancisco/Documents/Open%20Intelligence%20Platform/docs/architecture.md)
-- [docs/domain-model.md](/Users/dannyfrancisco/Documents/Open%20Intelligence%20Platform/docs/domain-model.md)
-- [docs/knowledge-management.md](/Users/dannyfrancisco/Documents/Open%20Intelligence%20Platform/docs/knowledge-management.md)
-- [docs/model-routing.md](/Users/dannyfrancisco/Documents/Open%20Intelligence%20Platform/docs/model-routing.md)
-- [docs/learning-pipeline.md](/Users/dannyfrancisco/Documents/Open%20Intelligence%20Platform/docs/learning-pipeline.md)
-- [docs/rag-architecture.md](/Users/dannyfrancisco/Documents/Open%20Intelligence%20Platform/docs/rag-architecture.md)
-- [docs/agent-framework.md](/Users/dannyfrancisco/Documents/Open%20Intelligence%20Platform/docs/agent-framework.md)
-- [docs/security.md](/Users/dannyfrancisco/Documents/Open%20Intelligence%20Platform/docs/security.md)
-- [docs/observability.md](/Users/dannyfrancisco/Documents/Open%20Intelligence%20Platform/docs/observability.md)
-- [docs/deployment.md](/Users/dannyfrancisco/Documents/Open%20Intelligence%20Platform/docs/deployment.md)
-- [docs/technology-stack.md](/Users/dannyfrancisco/Documents/Open%20Intelligence%20Platform/docs/technology-stack.md)
-- [docs/roadmap.md](/Users/dannyfrancisco/Documents/Open%20Intelligence%20Platform/docs/roadmap.md)
-- [docs/openapi.md](/Users/dannyfrancisco/Documents/Open%20Intelligence%20Platform/docs/openapi.md)
-- [docs/repository-structure.md](/Users/dannyfrancisco/Documents/Open%20Intelligence%20Platform/docs/repository-structure.md)
+- [docs/vision.md](docs/vision.md)
+- [docs/architecture.md](docs/architecture.md)
+- [docs/domain-model.md](docs/domain-model.md)
+- [docs/knowledge-management.md](docs/knowledge-management.md)
+- [docs/model-routing.md](docs/model-routing.md)
+- [docs/learning-pipeline.md](docs/learning-pipeline.md)
+- [docs/rag-architecture.md](docs/rag-architecture.md)
+- [docs/agent-framework.md](docs/agent-framework.md)
+- [docs/security.md](docs/security.md)
+- [docs/observability.md](docs/observability.md)
+- [docs/deployment.md](docs/deployment.md)
+- [docs/technology-stack.md](docs/technology-stack.md)
+- [docs/roadmap.md](docs/roadmap.md)
+- [docs/openapi.md](docs/openapi.md)
+- [docs/repository-structure.md](docs/repository-structure.md)
