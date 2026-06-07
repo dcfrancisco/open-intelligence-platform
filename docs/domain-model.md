@@ -21,6 +21,14 @@ erDiagram
     MemoryEntry ||--o{ MemoryTag : labeled_by
     MemoryEntry ||--o{ MemoryFeedback : reviewed_by
     MemoryEntry ||--o{ MemorySnapshot : versioned_as
+    Workspace ||--o{ McpServer : allows
+    McpServer ||--o{ McpTool : exposes
+    McpServer ||--o{ McpResource : shares
+    McpServer ||--o{ McpPrompt : provides
+    McpServer ||--o{ McpConnection : connects_through
+    McpServer ||--o{ McpCredential : secured_by
+    McpServer ||--o{ McpPolicy : governed_by
+    McpServer ||--o{ McpAuditEvent : audited_by
     Workspace ||--o{ Conversation : has
     Conversation ||--o{ Prompt : includes
     Prompt ||--o{ Response : receives
@@ -101,6 +109,55 @@ erDiagram
         string snapshotVersion
         datetime capturedAt
         string checksum
+    }
+    McpServer {
+        uuid id
+        string name
+        string version
+        string endpoint
+        string status
+    }
+    McpTool {
+        uuid id
+        string toolName
+        string capability
+        string certificationState
+    }
+    McpResource {
+        uuid id
+        string resourceName
+        string resourceType
+        string visibility
+    }
+    McpPrompt {
+        uuid id
+        string promptName
+        string version
+        string status
+    }
+    McpPolicy {
+        uuid id
+        string policyName
+        string effect
+        string scope
+    }
+    McpConnection {
+        uuid id
+        string connectionType
+        string authenticationType
+        string state
+    }
+    McpAuditEvent {
+        uuid id
+        string action
+        string result
+        datetime occurredAt
+    }
+    McpCredential {
+        uuid id
+        string credentialType
+        string secretRef
+        string rotationState
     }
     Document {
         uuid id
@@ -210,6 +267,10 @@ A memory collection groups related memory assets. Each memory record represents 
 ### MemorySource, MemoryRelationship, MemoryTag, MemoryFeedback, and MemorySnapshot
 
 Memory sources preserve provenance to documents, conversations, repositories, incidents, ADRs, and reviews. Memory relationships link related memories together. Tags support classification and discovery. Feedback helps improve memory quality. Snapshots preserve historical states so memory can evolve without losing traceability.
+
+### MCP Platform Entities
+
+MCP servers represent managed tool endpoints. Tools, resources, and prompts describe the capabilities exposed by those servers. MCP connections and credentials define how OIP connects to them. MCP policies govern access. MCP audit events preserve operational and governance history for tool usage and server lifecycle actions.
 
 ### KnowledgeBase, Document, Chunk, and Embedding
 

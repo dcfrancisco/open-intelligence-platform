@@ -19,7 +19,7 @@ The first runnable MVP will use:
 The backend will organize capabilities into internal modules such as:
 
 - API
-- provider adapters
+- provider integrations
 - routing
 - knowledge ingestion
 - retrieval

@@ -1,6 +1,6 @@
 # Vision
 
-Open Intelligence Platform is a private AI development platform with memory. The platform is designed to preserve knowledge as a long-lived organizational asset, not merely to provide access to model inference.
+Open Intelligence Platform is a Private AI Development Platform with Memory. The platform is designed to preserve knowledge as a long-lived organizational asset, not merely to provide access to model inference.
 
 ## Problem Statement
 
@@ -23,7 +23,7 @@ The platform must solve this problem across three deployment tiers:
 - Team or small business deployment for shared knowledge and controlled operations
 - Enterprise or production deployment for security, governance, scale, and resilience
 
-This makes OIP more than a private AI platform. It becomes a private AI development platform with organizational memory.
+This makes OIP more than a private AI platform. It becomes a Private AI Development Platform with Memory.
 
 ## Market Opportunity
 
@@ -86,7 +86,7 @@ Needs reusable development memory such as architecture patterns, coding standard
 - Regulated or privacy-sensitive knowledge retrieval with workspace boundaries and auditability
 - Team memory built from human interactions and approved AI outputs
 - Fine-tuning on domain-specific datasets where baseline models are insufficient
-- Cross-product intelligence services shared by Delivery Wizard, PortalOps AI, EventEase, and WorkTime
+- Cross-product intelligence services shared by Delivery Wizard, PortalOps AI, EventEase AI, and WorkTime AI
 
 ## Long-Term Vision
 

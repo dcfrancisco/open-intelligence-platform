@@ -34,6 +34,11 @@ target/
 build/
 .gradle/
 *.class
+.mvn-repo/
+*.iml
+.classpath
+.project
+.settings/
 
 # Python and data tooling
 __pycache__/

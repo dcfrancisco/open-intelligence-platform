@@ -45,7 +45,7 @@ OIP therefore keeps these as separate but connected pipelines.
 ## Learning Workflow
 
 ```mermaid
-flowchart LR
+flowchart TD
     Interactions[User Interactions] --> Capture[Capture Prompt, Response, Metadata]
     Feedback[Ratings, Corrections, Approvals] --> Capture
     Capture --> Triage[Triage and Policy Filters]

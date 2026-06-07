@@ -48,7 +48,7 @@ Projects may include:
 - PortalOps AI
 
 ```mermaid
-flowchart LR
+flowchart TD
     Sources[Requirements, ADRs, APIs, KT Notes, Runbooks] --> ProjectCollection[Project Memory Collection]
     ProjectCollection --> Decisions[Decisions and History]
     ProjectCollection --> Patterns[Project Patterns]
@@ -73,7 +73,7 @@ Examples:
 - Flutter conventions
 
 ```mermaid
-flowchart LR
+flowchart TD
     EngSources[Code Reviews, Repos, ADRs, Retrospectives] --> DevMemory[Development Memory Collection]
     DevMemory --> Standards[Standards and Conventions]
     DevMemory --> Fixes[Common Fixes and Patterns]
@@ -97,7 +97,7 @@ Examples:
 - Operational procedures
 
 ```mermaid
-flowchart LR
+flowchart TD
     OrgSources[Incidents, KT Sessions, Ops Docs, Team Maps] --> OrgMemory[Organizational Memory Collection]
     OrgMemory --> Ownership[Ownership and SME Graph]
     OrgMemory --> Escalation[Escalation and Approval Paths]
@@ -147,7 +147,7 @@ OIP should ingest memory from:
 - Architecture reviews
 
 ```mermaid
-flowchart TB
+flowchart TD
     Sources[Documents, Repositories, ADRs, KT, Incidents, Conversations, Architecture Reviews] --> Normalize[Normalize and Parse]
     Normalize --> Classify[Classify Source, Sensitivity, and Memory Level]
     Classify --> Extract[Extract Facts, Decisions, Patterns, Ownership, and Lessons]
@@ -193,7 +193,7 @@ The Memory Layer must support:
 - Auditability
 
 ```mermaid
-flowchart LR
+flowchart TD
     MemoryEntry[Memory Entry] --> Classify[Classification]
     Classify --> Isolate[Workspace Isolation]
     Isolate --> Retain[Retention Policy]

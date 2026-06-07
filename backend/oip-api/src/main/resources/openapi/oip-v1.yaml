@@ -1,0 +1,580 @@
+openapi: 3.0.3
+info:
+  title: Open Intelligence Platform API
+  version: v1
+  description: Memory First Foundation API for Open Intelligence Platform.
+servers:
+  - url: http://localhost:8080
+paths:
+  /api/v1/workspaces:
+    get:
+      summary: List workspaces
+      tags: [Workspace API]
+      responses:
+        '200':
+          description: Workspaces
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/WorkspaceView'
+    post:
+      summary: Create workspace
+      tags: [Workspace API]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateWorkspaceRequest'
+      responses:
+        '201':
+          description: Workspace created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/WorkspaceView'
+  /api/v1/workspaces/{workspaceId}/memory/collections:
+    get:
+      summary: List memory collections
+      tags: [Memory API]
+      parameters:
+        - $ref: '#/components/parameters/WorkspaceIdPath'
+      responses:
+        '200':
+          description: Collections
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/MemoryCollectionView'
+    post:
+      summary: Create memory collection
+      tags: [Memory API]
+      parameters:
+        - $ref: '#/components/parameters/WorkspaceIdPath'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateCollectionRequest'
+      responses:
+        '201':
+          description: Collection created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MemoryCollectionView'
+  /api/v1/memory/sources:
+    post:
+      summary: Upload document metadata
+      tags: [Memory API]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UploadDocumentMetadataRequest'
+      responses:
+        '201':
+          description: Metadata stored
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MemorySourceView'
+  /api/v1/memory/entries:
+    post:
+      summary: Create memory entry
+      tags: [Memory API]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateMemoryEntryRequest'
+      responses:
+        '201':
+          description: Entry created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MemoryEntryView'
+  /api/v1/memory/search:
+    get:
+      summary: Search memory
+      tags: [Memory API]
+      parameters:
+        - $ref: '#/components/parameters/WorkspaceIdQuery'
+        - name: collectionId
+          in: query
+          required: false
+          schema:
+            type: string
+            format: uuid
+        - name: query
+          in: query
+          required: true
+          schema:
+            type: string
+        - name: limit
+          in: query
+          required: false
+          schema:
+            type: integer
+            default: 5
+      responses:
+        '200':
+          description: Search results
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/MemoryEntryView'
+  /api/v1/memory/entries/{entryId}:
+    get:
+      summary: Get memory entry
+      tags: [Memory API]
+      parameters:
+        - $ref: '#/components/parameters/EntryIdPath'
+      responses:
+        '200':
+          description: Entry
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MemoryEntryView'
+    delete:
+      summary: Delete memory entry
+      tags: [Memory API]
+      parameters:
+        - $ref: '#/components/parameters/EntryIdPath'
+      responses:
+        '204':
+          description: Entry deleted
+  /api/v1/providers:
+    get:
+      summary: List providers
+      tags: [Provider API]
+      responses:
+        '200':
+          description: Providers
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ProviderView'
+    post:
+      summary: Register provider
+      tags: [Provider API]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RegisterProviderRequest'
+      responses:
+        '201':
+          description: Provider registered
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProviderView'
+  /api/v1/providers/{providerId}/enable:
+    patch:
+      summary: Enable provider
+      tags: [Provider API]
+      parameters:
+        - $ref: '#/components/parameters/ProviderIdPath'
+      responses:
+        '200':
+          description: Provider enabled
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProviderView'
+  /api/v1/providers/{providerId}/disable:
+    patch:
+      summary: Disable provider
+      tags: [Provider API]
+      parameters:
+        - $ref: '#/components/parameters/ProviderIdPath'
+      responses:
+        '200':
+          description: Provider disabled
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProviderView'
+  /api/v1/providers/{providerId}/health:
+    get:
+      summary: Health check provider
+      tags: [Provider API]
+      parameters:
+        - $ref: '#/components/parameters/ProviderIdPath'
+      responses:
+        '200':
+          description: Provider health
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProviderHealthView'
+  /api/v1/ask:
+    post:
+      summary: Ask grounded question
+      tags: [Ask API]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AskRequest'
+      responses:
+        '200':
+          description: Grounded answer
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AskResult'
+  /api/v1/health:
+    get:
+      summary: Application health
+      tags: [Health API]
+      responses:
+        '200':
+          description: Health
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HealthResponse'
+components:
+  parameters:
+    WorkspaceIdPath:
+      name: workspaceId
+      in: path
+      required: true
+      schema:
+        type: string
+        format: uuid
+    WorkspaceIdQuery:
+      name: workspaceId
+      in: query
+      required: true
+      schema:
+        type: string
+        format: uuid
+    EntryIdPath:
+      name: entryId
+      in: path
+      required: true
+      schema:
+        type: string
+        format: uuid
+    ProviderIdPath:
+      name: providerId
+      in: path
+      required: true
+      schema:
+        type: string
+        format: uuid
+  schemas:
+    CreateWorkspaceRequest:
+      type: object
+      required: [name]
+      properties:
+        name:
+          type: string
+        description:
+          type: string
+    WorkspaceView:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        name:
+          type: string
+        description:
+          type: string
+        createdAt:
+          type: string
+          format: date-time
+    CreateCollectionRequest:
+      type: object
+      required: [name]
+      properties:
+        name:
+          type: string
+        description:
+          type: string
+    UploadDocumentMetadataRequest:
+      type: object
+      required: [workspaceId, collectionId, sourceType, name]
+      properties:
+        workspaceId:
+          type: string
+          format: uuid
+        collectionId:
+          type: string
+          format: uuid
+        sourceType:
+          type: string
+          enum: [DOCUMENT, REPOSITORY, ADR, KT_SESSION, INCIDENT, CONVERSATION, ARCHITECTURE_REVIEW]
+        name:
+          type: string
+        uri:
+          type: string
+        contentType:
+          type: string
+    CreateMemoryEntryRequest:
+      type: object
+      required: [workspaceId, collectionId, title, content]
+      properties:
+        workspaceId:
+          type: string
+          format: uuid
+        collectionId:
+          type: string
+          format: uuid
+        sourceId:
+          type: string
+          format: uuid
+        title:
+          type: string
+        content:
+          type: string
+        tags:
+          type: array
+          items:
+            type: string
+    MemoryCollectionView:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        workspaceId:
+          type: string
+          format: uuid
+        name:
+          type: string
+        description:
+          type: string
+        createdAt:
+          type: string
+          format: date-time
+    MemorySourceView:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        workspaceId:
+          type: string
+          format: uuid
+        collectionId:
+          type: string
+          format: uuid
+        sourceType:
+          type: string
+        name:
+          type: string
+        uri:
+          type: string
+        contentType:
+          type: string
+        createdAt:
+          type: string
+          format: date-time
+    MemoryEntryView:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        workspaceId:
+          type: string
+          format: uuid
+        collectionId:
+          type: string
+          format: uuid
+        sourceId:
+          type: string
+          format: uuid
+        title:
+          type: string
+        content:
+          type: string
+        tags:
+          type: array
+          items:
+            type: string
+        sourceName:
+          type: string
+        sourceType:
+          type: string
+        sourceUri:
+          type: string
+        createdAt:
+          type: string
+          format: date-time
+    RegisterProviderRequest:
+      type: object
+      required: [name, providerType, baseUrl, modelName]
+      properties:
+        workspaceId:
+          type: string
+          format: uuid
+        name:
+          type: string
+        providerType:
+          type: string
+          enum: [OLLAMA]
+        baseUrl:
+          type: string
+        modelName:
+          type: string
+        modelVersion:
+          type: string
+        contextWindow:
+          type: integer
+        capabilities:
+          type: string
+        costInformation:
+          type: string
+        routingPriority:
+          type: integer
+        enabled:
+          type: boolean
+    ProviderView:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        workspaceId:
+          type: string
+          format: uuid
+        name:
+          type: string
+        providerType:
+          type: string
+        baseUrl:
+          type: string
+        status:
+          type: string
+        models:
+          type: array
+          items:
+            $ref: '#/components/schemas/ModelView'
+    ModelView:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        name:
+          type: string
+        version:
+          type: string
+        contextWindow:
+          type: integer
+        capabilities:
+          type: string
+        costInformation:
+          type: string
+        routingPriority:
+          type: integer
+        status:
+          type: string
+    ProviderHealthView:
+      type: object
+      properties:
+        providerId:
+          type: string
+          format: uuid
+        providerName:
+          type: string
+        healthy:
+          type: boolean
+        detail:
+          type: string
+    AskRequest:
+      type: object
+      required: [workspaceId, question]
+      properties:
+        workspaceId:
+          type: string
+          format: uuid
+        collectionId:
+          type: string
+          format: uuid
+        conversationId:
+          type: string
+          format: uuid
+        question:
+          type: string
+    AskResult:
+      type: object
+      properties:
+        conversationId:
+          type: string
+          format: uuid
+        promptId:
+          type: string
+          format: uuid
+        responseId:
+          type: string
+          format: uuid
+        answer:
+          type: string
+        sources:
+          type: array
+          items:
+            $ref: '#/components/schemas/SourceReference'
+        retrievedEntries:
+          type: array
+          items:
+            $ref: '#/components/schemas/MemoryEntryView'
+        timingMetrics:
+          $ref: '#/components/schemas/TimingMetrics'
+    SourceReference:
+      type: object
+      properties:
+        sourceId:
+          type: string
+          format: uuid
+        sourceName:
+          type: string
+        sourceType:
+          type: string
+        sourceUri:
+          type: string
+    TimingMetrics:
+      type: object
+      properties:
+        retrievalMs:
+          type: integer
+          format: int64
+        generationMs:
+          type: integer
+          format: int64
+        totalMs:
+          type: integer
+          format: int64
+    HealthResponse:
+      type: object
+      properties:
+        status:
+          type: string
+        timestamp:
+          type: string
+          format: date-time
+        providers:
+          type: array
+          items:
+            $ref: '#/components/schemas/ProviderHealthView'

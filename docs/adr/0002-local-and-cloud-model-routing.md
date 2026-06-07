@@ -17,7 +17,7 @@ The MVP router will:
 
 - Accept a normalized inference request
 - Evaluate user or workspace preferences
-- Support local `Ollama` and one OpenAI-compatible cloud adapter
+- Support local `Ollama` and one OpenAI-compatible cloud provider integration
 - Prefer local models by policy when appropriate
 - Fall back to cloud when allowed and when capability or availability requires it
 

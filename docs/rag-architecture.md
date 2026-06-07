@@ -7,7 +7,7 @@ Retrieval-augmented generation gives OIP grounded answers over private knowledge
 ## Retrieval Flow
 
 ```mermaid
-flowchart LR
+flowchart TD
     Source[Source Content] --> Ingest[Ingestion]
     Ingest --> Normalize[Normalization]
     Normalize --> Chunk[Chunking]

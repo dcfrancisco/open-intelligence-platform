@@ -2,12 +2,12 @@
 
 ## Objective
 
-OIP provides a governed multi-agent framework for high-value tasks that benefit from tools, memory, retrieval, and workflow coordination.
+OIP provides a governed multi-agent framework for high-value tasks that benefit from tools, memory, retrieval, workflow coordination, and MCP-based tool access.
 
 ## Agent Topology
 
 ```mermaid
-flowchart TB
+flowchart TD
     User[User or API Client] --> Orchestrator[Agent Orchestrator]
     Orchestrator --> Coding[Coding Agent]
     Orchestrator --> Architecture[Architecture Agent]
@@ -16,12 +16,18 @@ flowchart TB
     Orchestrator --> Risk[Risk Agent]
     Orchestrator --> Ops[Operations Agent]
 
-    Coding --> Tools[Code, Repo, Test, Search Tools]
+    Orchestrator --> MCP[MCP Gateway]
+    Coding --> MCP
     Architecture --> Knowledge[Knowledge Retrieval]
+    Architecture --> MCP
     Docs --> Knowledge
+    Docs --> MCP
     KT --> Knowledge
+    KT --> MCP
     Risk --> Knowledge
+    Risk --> MCP
     Ops --> Observability[Metrics, Logs, Traces]
+    Ops --> MCP
 ```
 
 ## Agent Definitions
@@ -32,7 +38,7 @@ Responsibilities:
 Generate, explain, refactor, review, and validate code changes.
 
 Tools:
-Repository access, test execution, static analysis, search, and architecture retrieval.
+Repository access, test execution, static analysis, search, and architecture retrieval through the MCP layer.
 
 Inputs:
 Source code, user task, repo conventions, relevant design docs.
@@ -46,7 +52,7 @@ Responsibilities:
 Create solution designs, analyze tradeoffs, and maintain technical decision consistency.
 
 Tools:
-Knowledge retrieval, architecture templates, dependency analysis, and domain modeling utilities.
+Knowledge retrieval, architecture templates, dependency analysis, and domain modeling utilities accessed through OIP services and the MCP layer.
 
 Inputs:
 Requirements, constraints, non-functional expectations, and existing architecture knowledge.
@@ -60,7 +66,7 @@ Responsibilities:
 Write and maintain README files, technical guides, runbooks, and operational documentation.
 
 Tools:
-Knowledge retrieval, repository inspection, template generation, and markdown publishing workflows.
+Knowledge retrieval, repository inspection, template generation, and markdown publishing workflows through the MCP layer where tool execution is required.
 
 Inputs:
 Codebase state, architectural context, and user goals.
@@ -74,7 +80,7 @@ Responsibilities:
 Capture knowledge-transfer material, summarize sessions, identify ownership, and publish reusable knowledge.
 
 Tools:
-Transcript processing, knowledge extraction, entity linking, and retrieval.
+Transcript processing, knowledge extraction, entity linking, retrieval, and governed tool access through the MCP layer.
 
 Inputs:
 Meeting notes, transcripts, project artifacts, and team mappings.
@@ -88,7 +94,7 @@ Responsibilities:
 Identify technical, delivery, security, and operational risks.
 
 Tools:
-Knowledge retrieval, policy rules, architecture analysis, and dependency scans.
+Knowledge retrieval, policy rules, architecture analysis, dependency scans, and governed external tool access through the MCP layer.
 
 Inputs:
 Project plans, designs, incidents, and governance rules.
@@ -102,7 +108,7 @@ Responsibilities:
 Assist with monitoring, troubleshooting, runbook execution guidance, and production insight synthesis.
 
 Tools:
-Metrics, logs, traces, runbooks, incidents, and knowledge retrieval.
+Metrics, logs, traces, runbooks, incidents, and knowledge retrieval through observability services and the MCP layer.
 
 Inputs:
 Operational telemetry, service health, and runbook data.
@@ -114,4 +120,5 @@ Operational summaries, probable causes, suggested actions, and incident knowledg
 
 - Specialized agents improve clarity and governance compared with one undifferentiated assistant.
 - A shared orchestrator keeps execution policy, approval, tracing, and auditing consistent.
+- MCP gives every agent the same governed tool backbone instead of duplicating integration logic inside each agent.
 - Common knowledge and routing services let agents cooperate without tightly coupling their internals.

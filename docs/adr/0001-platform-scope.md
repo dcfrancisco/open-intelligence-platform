@@ -21,8 +21,8 @@ The MVP will include:
 - `Next.js` frontend
 - `Spring Boot` modular monolith backend
 - `PostgreSQL` with `pgvector`
-- Local `Ollama` provider adapter
-- One OpenAI-compatible provider adapter
+- Local `Ollama` provider integration
+- One OpenAI-compatible provider integration
 - Basic model routing
 - Document ingestion
 - Chunking, embeddings, retrieval, and ask-question API

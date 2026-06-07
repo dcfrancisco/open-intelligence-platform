@@ -7,6 +7,7 @@
 - API-first design: every major capability is exposed through versioned APIs and events
 - Separation of concerns: knowledge learning, agent execution, and model training are independent pipelines
 - Memory as a platform layer: durable memory is a core capability distinct from model inference and model training
+- MCP as a platform layer: tool access is standardized through MCP rather than embedded directly into agents or product-specific integrations
 - Production readiness: security, auditability, and observability are first-class concerns
 - Extensibility by contract: future products integrate through APIs, events, shared identity, and domain adapters rather than core rewrites
 - Tiered deployment: the same architecture supports developer, team, and enterprise production deployments
@@ -15,7 +16,7 @@
 ## High-Level Architecture
 
 ```mermaid
-flowchart LR
+flowchart TD
     User[User] --> UI[Web UI]
     UI --> APIGW[API Gateway]
     UI --> Identity[Identity Service]
@@ -30,6 +31,12 @@ flowchart LR
     APIGW --> Audit[Audit Service]
     APIGW --> Secrets[Secrets Service]
     APIGW --> Agent[Agent Orchestrator]
+    APIGW --> MCPGateway[MCP Gateway]
+    APIGW --> MCPRegistry[MCP Registry]
+    APIGW --> MCPSecurity[MCP Security Service]
+    APIGW --> MCPPolicy[MCP Policy Service]
+    APIGW --> MCPAudit[MCP Audit Service]
+    APIGW --> MCPMonitor[MCP Monitoring Service]
     APIGW --> Knowledge[Knowledge Services]
     APIGW --> Router[Model Router]
     APIGW --> ProviderRegistry[Provider Registry]
@@ -46,6 +53,7 @@ flowchart LR
     Policy --> Knowledge
     Policy --> MemoryGov
     Policy --> Router
+    Policy --> MCPPolicy
     Audit --> RDB[(Relational Database)]
     Secrets --> LocalModels[Local Model Providers]
     Secrets --> CloudModels[Cloud Model Providers]
@@ -60,7 +68,16 @@ flowchart LR
     MemoryGov --> Audit
     Agent --> Knowledge
     Agent --> MemoryRetrieval
+    Agent --> MCPGateway
     Agent --> Router
+    MCPGateway --> MCPRegistry
+    MCPGateway --> MCPSecurity
+    MCPGateway --> MCPPolicy
+    MCPGateway --> MCPAudit
+    MCPGateway --> MCPMonitor
+    MCPRegistry --> RDB
+    MCPAudit --> RDB
+    MCPSecurity --> Secrets
     Knowledge --> VectorDB[(Vector Database)]
     Knowledge --> RDB
     Knowledge --> Kafka[(Kafka)]
@@ -97,6 +114,12 @@ flowchart LR
     MemoryGov --> Obs
     MemoryAnalytics --> Obs
     Audit --> Obs
+    MCPGateway --> Obs
+    MCPRegistry --> Obs
+    MCPSecurity --> Obs
+    MCPPolicy --> Obs
+    MCPAudit --> Obs
+    MCPMonitor --> Obs
     Cost --> Obs
     Evaluation --> Obs
     Ops --> Obs
@@ -110,7 +133,7 @@ flowchart LR
 
 ### Web UI
 
-Provides workspace management, chat, retrieval experiences, agent task execution, model selection preferences, admin views, and operational dashboards. `Next.js` is a strong fit because it supports SSR, authenticated app experiences, and modular frontend growth.
+Provides workspace management, chat, retrieval experiences, agent task execution, model selection preferences, and administration views for providers, models, memory, and MCP integrations. `Next.js` is a strong fit because it supports SSR, authenticated app experiences, and modular frontend growth.
 
 ### API Gateway
 
@@ -158,7 +181,31 @@ Measures memory freshness, quality, duplication, coverage, and gap signals. It h
 
 ### Agent Orchestrator
 
-Coordinates agent execution, tool invocation, workflow state, approvals, retries, and guardrails. It exists as a dedicated service because agent behavior should be governable and observable independently of UI chat flows.
+Coordinates agent execution, MCP-based tool invocation, workflow state, approvals, retries, and guardrails. It exists as a dedicated service because agent behavior should be governable and observable independently of UI chat flows.
+
+### MCP Gateway
+
+Acts as the standardized execution layer between agents or platform services and MCP servers. It resolves tool requests, enforces connection flow, and keeps tool invocation logic out of individual agents.
+
+### MCP Registry
+
+Stores discoverable metadata for internal and external MCP servers, including ownership, endpoint, authentication type, capabilities, health status, certification state, and allowed workspaces.
+
+### MCP Security Service
+
+Protects MCP credentials, validates trust boundaries, and ensures that tool connections use approved authentication methods and secure transport.
+
+### MCP Policy Service
+
+Applies workspace isolation, tool allow lists, deny lists, approval requirements, rate limits, and execution permissions before any MCP tool call is allowed.
+
+### MCP Audit Service
+
+Captures auditable records for MCP registration changes, credential updates, tool executions, approvals, denials, and deprecations.
+
+### MCP Monitoring Service
+
+Tracks tool latency, failures, success rate, rate-limit behavior, and usage patterns across MCP servers and agents.
 
 ### Knowledge Services
 
@@ -174,7 +221,7 @@ Maintains the catalog of configured providers, endpoints, capabilities, credenti
 
 ### Model Registry
 
-Tracks available models, versions, capabilities, hosting mode, evaluation status, promotion state, and release metadata. This is the control point for safe rollout and rollback of fine-tuned or newly approved models.
+Tracks available models, versions, context windows, capabilities, hosting mode, cost information, routing priority, evaluation status, promotion state, and release metadata. This is the control point for safe rollout and rollback of fine-tuned or newly approved models. Models are managed through the UI so new models can be added without code changes.
 
 ### Prompt Registry
 
@@ -220,6 +267,7 @@ Collects logs, metrics, traces, health signals, AI usage telemetry, and audit-co
 
 - It supports both simple and advanced deployments without changing the core design.
 - It preserves organizational memory as a stable system even when models, prompts, or providers evolve.
+- It standardizes tool access through MCP so future products can reuse one governed integration backbone.
 - It avoids embedding provider-specific logic into UI or business workflows.
 - It keeps real-time inference concerns separate from asynchronous learning and training concerns.
 - It creates clear extension points for future products to consume knowledge, agents, routing, governance, and identity services.
@@ -229,9 +277,10 @@ Collects logs, metrics, traces, health signals, AI usage telemetry, and audit-co
 ## Component Diagram
 
 ```mermaid
-flowchart TB
+flowchart TD
     subgraph Presentation
         UI[Next.js Web UI]
+        Admin[Admin Screens]
     end
 
     subgraph Edge
@@ -249,6 +298,12 @@ flowchart TB
         MemoryAnalytics[Memory Analytics Service]
         Conversation[Conversation Service]
         Agent[Agent Orchestrator]
+        MCPGateway[MCP Gateway]
+        MCPRegistry[MCP Registry]
+        MCPSecurity[MCP Security Service]
+        MCPPolicy[MCP Policy Service]
+        MCPAudit[MCP Audit Service]
+        MCPMonitor[MCP Monitoring Service]
         Knowledge[Knowledge Service]
         Learning[Learning Pipeline Service]
         Router[Model Router]
@@ -280,7 +335,13 @@ flowchart TB
         DeepSeek[DeepSeek]
     end
 
+    subgraph MCPServers
+        InternalMCP[Internal MCP Servers]
+        ExternalMCP[External MCP Servers]
+    end
+
     UI --> APIGW
+    Admin --> APIGW
     UI --> Identity
     APIGW --> Identity
     APIGW --> Policy
@@ -292,6 +353,12 @@ flowchart TB
     APIGW --> MemoryAnalytics
     APIGW --> Conversation
     APIGW --> Agent
+    APIGW --> MCPGateway
+    APIGW --> MCPRegistry
+    APIGW --> MCPSecurity
+    APIGW --> MCPPolicy
+    APIGW --> MCPAudit
+    APIGW --> MCPMonitor
     APIGW --> Knowledge
     APIGW --> Router
     APIGW --> Training
@@ -309,7 +376,17 @@ flowchart TB
     Agent --> Router
     Agent --> Knowledge
     Agent --> MemoryRetrieval
+    Agent --> MCPGateway
     Agent --> PromptRegistry
+    MCPGateway --> MCPRegistry
+    MCPGateway --> MCPSecurity
+    MCPGateway --> MCPPolicy
+    MCPGateway --> MCPAudit
+    MCPGateway --> MCPMonitor
+    MCPGateway --> InternalMCP
+    MCPGateway --> ExternalMCP
+    MCPRegistry --> Postgres
+    MCPAudit --> Postgres
     Memory --> MemoryIndex
     Memory --> Postgres
     MemoryIndex --> Vector
@@ -363,52 +440,27 @@ flowchart TB
 ## Deployment Diagram
 
 ```mermaid
-flowchart TB
-    subgraph Developer
-        LUI[Browser]
-        LApp[Next.js + Spring Boot Modular Monolith]
-        LDB[(PostgreSQL + pgvector)]
-        LOllama[Ollama]
-        LUI --> LApp --> LDB
-        LApp --> LOllama
-    end
+flowchart TD
+    DeveloperBrowser[Developer Browser] --> DevApp[Next.js + Spring Boot Modular Monolith]
+    DevApp --> DevDB[(PostgreSQL + pgvector)]
+    DevApp --> DevOllama[Ollama]
 
-    subgraph Team
-        SProxy[Reverse Proxy]
-        SUI[Web UI]
-        SAPI[API Services]
-        SData[(PostgreSQL / Vector)]
-        SVLLM[vLLM or Ollama]
-        SBackup[Backup Jobs]
-        SProxy --> SUI
-        SProxy --> SAPI
-        SAPI --> SData
-        SAPI --> SVLLM
-        SAPI --> SBackup
-    end
+    TeamProxy[Team Reverse Proxy] --> TeamUI[Web UI]
+    TeamProxy --> TeamAPI[API Services]
+    TeamAPI --> TeamData[(PostgreSQL / Vector)]
+    TeamAPI --> TeamModels[vLLM or Ollama]
+    TeamAPI --> TeamBackup[Backup Jobs]
 
-    subgraph Enterprise
-        Ingress[Ingress]
-        FE[Frontend Pods]
-        Core[Core Service Pods]
-        Train[Training Workers]
-        Data[(Managed PostgreSQL / Vector / Kafka / Object Storage)]
-        LocalAI[Inference Cluster]
-        CloudAI[Cloud Providers]
-        IdP[Enterprise IdP]
-        Vault[Secrets Manager]
-        DR[Backup and DR Systems]
-        Ingress --> FE
-        Ingress --> Core
-        Core --> Data
-        Core --> LocalAI
-        Core --> CloudAI
-        Core --> IdP
-        Core --> Vault
-        Core --> DR
-        Train --> Data
-        Train --> LocalAI
-    end
+    EnterpriseIngress[Ingress] --> EnterpriseFE[Frontend Pods]
+    EnterpriseIngress --> EnterpriseCore[Core Service Pods]
+    EnterpriseCore --> EnterpriseData[(Managed PostgreSQL / Vector / Kafka / Object Storage)]
+    EnterpriseCore --> EnterpriseAI[Inference Cluster]
+    EnterpriseCore --> EnterpriseCloud[Cloud Providers]
+    EnterpriseCore --> EnterpriseIdP[Enterprise IdP]
+    EnterpriseCore --> EnterpriseVault[Secrets Manager]
+    EnterpriseCore --> EnterpriseDR[Backup and DR Systems]
+    EnterpriseTrain[Training Workers] --> EnterpriseData
+    EnterpriseTrain --> EnterpriseAI
 ```
 
 ## Deployment Tiers
@@ -444,6 +496,26 @@ sequenceDiagram
     M-->>MR: Generated answer
     MR-->>UI: Response + metadata
     UI-->>U: Render answer, citations, and provider details
+```
+
+### MCP Tool Execution
+
+```mermaid
+sequenceDiagram
+    participant U as User
+    participant A as Agent
+    participant G as MCP Gateway
+    participant R as MCP Registry
+    participant S as MCP Server
+
+    U->>A: Request task requiring tool access
+    A->>G: Execute tool request
+    G->>R: Resolve server and tool metadata
+    R-->>G: Server endpoint and policy metadata
+    G->>S: Invoke MCP server
+    S-->>G: Tool response
+    G-->>A: Governed tool result
+    A-->>U: Final response
 ```
 
 ### Learn From Interaction

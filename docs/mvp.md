@@ -22,8 +22,8 @@ The MVP is intentionally small, but every MVP component is designed as the first
 - `Spring Boot` backend as a modular monolith
 - `Next.js` frontend
 - `PostgreSQL` with `pgvector`
-- Local provider adapter for `Ollama`
-- One OpenAI-compatible provider adapter
+- Local inference provider for `Ollama`
+- One OpenAI-compatible provider
 - Basic model router
 - Document ingestion
 - Chunking
@@ -62,16 +62,18 @@ This MVP focuses on the minimum path that proves OIP is viable:
 ## MVP Architecture
 
 ```mermaid
-flowchart LR
+flowchart TD
     User[User] --> UI[Next.js Chat UI]
     UI --> API[Spring Boot API]
     API --> Workspace[Workspace Boundaries]
     API --> Policy[Policy Hooks]
     API --> Audit[Audit Hooks]
+    API --> Memory[Project Memory Module]
     API --> Ingest[Document Ingestion Module]
     API --> Retrieve[Retrieval Module]
     API --> Router[Model Router]
     API --> Cost[Usage and Cost Hooks]
+    Memory --> DB[(PostgreSQL + pgvector)]
     Ingest --> DB[(PostgreSQL + pgvector)]
     Retrieve --> DB
     Router --> Ollama[Ollama Adapter]
@@ -87,7 +89,7 @@ Recommended internal modules:
 - `api`: REST controllers and request models
 - `knowledge`: document ingestion, chunking, embedding, and retrieval
 - `routing`: model selection and normalized inference contracts
-- `providers`: `Ollama` and OpenAI-compatible adapters
+- `providers`: `Ollama` and OpenAI-compatible provider integrations
 - `persistence`: repositories, migrations, and vector queries
 - `shared`: configuration, error handling, and observability hooks
 
@@ -131,17 +133,20 @@ sequenceDiagram
     participant U as User
     participant UI as Next.js UI
     participant API as Spring Boot API
+    participant M as Memory Module
     participant K as Retrieval Module
     participant R as Model Router
-    participant M as Selected Model
+    participant P as Selected Model
 
     U->>UI: Ask question
     UI->>API: POST /api/v1/ask
+    API->>M: Resolve project memory context
+    M-->>API: Relevant memory entries
     API->>K: Retrieve context
     K-->>API: Top matching chunks
-    API->>R: Route prompt + context
-    R->>M: Invoke provider adapter
-    M-->>API: Answer
+    API->>R: Route prompt + memory + context
+    R->>P: Invoke selected provider
+    P-->>API: Answer
     API-->>UI: Answer + source references
 ```
 
@@ -188,7 +193,7 @@ The MVP is successful when a contributor can:
 3. Start the Next.js frontend
 4. Upload one or more documents
 5. Ask a question grounded in those documents
-6. Receive an answer produced through the model router using either `Ollama` or the OpenAI-compatible adapter
+6. Receive an answer produced through the model router using either `Ollama` or the OpenAI-compatible provider
 
 ## Enterprise Direction
 

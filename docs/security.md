@@ -15,7 +15,7 @@ The security architecture should scale from a simple self-hosted install to ente
 ## Security Architecture
 
 ```mermaid
-flowchart LR
+flowchart TD
     User[User] --> IdP[Identity Provider]
     IdP --> Auth[Identity Service]
     Auth --> Gateway[API Gateway]

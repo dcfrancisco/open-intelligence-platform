@@ -25,7 +25,7 @@ Characteristics:
 - Optional cloud providers for higher-capability tasks
 
 ```mermaid
-flowchart LR
+flowchart TD
     Browser[Browser] --> Frontend[Next.js App]
     Frontend --> Backend[Spring Boot API]
     Backend --> Postgres[(PostgreSQL + pgvector)]
@@ -46,7 +46,7 @@ Characteristics:
 - Shared workspaces, provider configuration, and basic role management
 
 ```mermaid
-flowchart TB
+flowchart TD
     Proxy[Reverse Proxy]
     UI[UI Container]
     API[API Container]
@@ -76,7 +76,7 @@ Characteristics:
 - Backup, restore, and DR integration
 
 ```mermaid
-flowchart TB
+flowchart TD
     Ingress[Ingress Controller] --> FE[Frontend Deployment]
     Ingress --> APIs[API and Agent Deployments]
     APIs --> DB[(Managed PostgreSQL)]

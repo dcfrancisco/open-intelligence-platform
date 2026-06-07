@@ -53,6 +53,8 @@ The router should evaluate:
 - Current pricing and token budget
 - Latency SLO
 - Availability of local hardware
+- UI-configured routing policy rules
+- Model registry metadata such as routing priority and status
 
 ## Decision Flow
 
@@ -93,4 +95,42 @@ flowchart TD
 
 ## Extensibility
 
-Future integrations such as Delivery Wizard, PortalOps AI, EventEase, and WorkTime should call the same routing service or SDK. That keeps model governance consistent across products while still allowing domain-specific prompting and tools.
+Future integrations such as Delivery Wizard, PortalOps AI, EventEase AI, and WorkTime AI should call the same routing service or SDK. That keeps model governance consistent across products while still allowing domain-specific prompting and tools.
+
+## UI-Configurable Routing Policies
+
+Routing policies should be configurable through the frontend rather than hard-coded. OIP should allow administrators to map task categories to preferred models and fallback models using model registry entries.
+
+Examples:
+
+- Coding -> Qwen Coder
+- Architecture -> GPT
+- Documentation -> Claude
+- Fallback -> DeepSeek
+
+These rules should be stored as managed policy data so model selection can evolve without code changes.
+
+## Model Registry Expectations
+
+The model registry should store:
+
+- Model name
+- Provider
+- Version
+- Context window
+- Capabilities
+- Cost information
+- Routing priority
+- Status
+
+This gives the model router enough metadata to make governed, configurable decisions across local and cloud providers.
+
+```mermaid
+flowchart TD
+    AdminUI[Model Management UI] --> ModelRegistry[Model Registry]
+    AdminUI --> RoutingPolicy[Routing Policy Configuration]
+    RoutingPolicy --> ModelRouter[Model Router]
+    ModelRegistry --> ModelRouter
+    ModelRouter --> LocalProviders[Local Providers]
+    ModelRouter --> CloudProviders[Cloud Providers]
+```

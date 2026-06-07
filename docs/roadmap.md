@@ -36,7 +36,7 @@ Memory is a cross-cutting platform capability across the entire roadmap. OIP is 
 - Basic chat UI
 - Basic RAG
 - Document ingestion
-- Project Memory
+- Project memory
 - Source attribution
 - Project collections
 - `PostgreSQL` plus `pgvector`
@@ -59,7 +59,7 @@ Memory is a cross-cutting platform capability across the entire roadmap. OIP is 
 - Conversation history
 - Provider configuration
 - Usage tracking
-- Development Memory
+- Development memory
 - Reusable patterns
 - Lessons learned
 - Coding conventions
@@ -103,6 +103,24 @@ Memory is a cross-cutting platform capability across the entire roadmap. OIP is 
 - Approval workflows
 - Tool execution controls
 
+## Phase 4.5: MCP Integration Platform
+
+### Objectives
+
+- Introduce MCP as the standardized tool integration layer for agents and future products
+- Govern internal and external MCP servers consistently
+- Create reusable enterprise connectors without embedding tool logic into product code
+
+### Deliverables
+
+- MCP Gateway
+- MCP Registry
+- MCP Security
+- MCP Governance
+- MCP Monitoring
+- Tool Marketplace
+- Enterprise Connectors
+
 ## Phase 5: Organizational Intelligence
 
 ### Objectives
@@ -119,7 +137,7 @@ Memory is a cross-cutting platform capability across the entire roadmap. OIP is 
 - Project memory
 - Incident learning
 - KT lifecycle
-- Organizational Memory
+- Organizational memory
 
 ## Phase 6: Continuous Learning Platform
 
@@ -138,7 +156,7 @@ Memory is a cross-cutting platform capability across the entire roadmap. OIP is 
 - Learning pipeline
 - Quality scoring
 - Regression testing for prompts and models
-- Memory Analytics
+- Memory analytics
 - Knowledge gaps
 - Stale knowledge detection
 - Duplicate knowledge detection

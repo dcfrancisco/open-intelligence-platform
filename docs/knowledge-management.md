@@ -61,7 +61,7 @@ These ingestion flows should also emit memory candidates into the Memory Layer s
 ## Knowledge Flow
 
 ```mermaid
-flowchart LR
+flowchart TD
     Sources[Docs, Wikis, Tickets, KT Sessions, Incidents, ADRs] --> Intake[Intake and Normalization]
     Intake --> Classify[Classification and Sensitivity Tagging]
     Classify --> Enrich[Ownership, SME, Escalation, and Domain Enrichment]

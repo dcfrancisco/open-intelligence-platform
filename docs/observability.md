@@ -9,7 +9,7 @@ Observability must support all three operating tiers, from a developer debugging
 ## Observability Architecture
 
 ```mermaid
-flowchart TB
+flowchart TD
     UI[Web UI] --> OTel[OpenTelemetry]
     Gateway[API Gateway] --> OTel
     Agents[Agent Services] --> OTel
@@ -19,6 +19,7 @@ flowchart TB
     Identity[Identity and Policy Services] --> OTel
     Cost[Cost Governance Service] --> OTel
     Audit[Audit Service] --> OTel
+    MCP[MCP Services] --> OTel
 
     OTel --> Metrics[Prometheus]
     OTel --> Traces[Tracing Backend]
@@ -45,6 +46,8 @@ Key log categories:
 - Model invocation metadata
 - Agent tool execution
 - Training lifecycle events
+- MCP server registration and lifecycle events
+- MCP tool execution events
 - Environment promotion and deployment events
 - Backup, restore, and DR activity
 
@@ -74,6 +77,9 @@ Recommended metric families:
 - Rate limiting and quota enforcement
 - Model quality metrics and evaluation results
 - Provider health and fallback frequency
+- MCP tool latency and failure rate
+- MCP tool success rate
+- Agent MCP tool usage counts
 - Queue depth and worker throughput
 - Training job duration and failure rates
 - Audit event volume and policy denial counts
@@ -120,10 +126,11 @@ Distributed tracing should follow:
 - Gateway to knowledge retrieval
 - Retrieval to vector store
 - Gateway or agent to model router
-- Router to provider adapter
+- Router to provider integration
 - Router fallback and cost policy decisions
 - Agent workflow steps and tool calls
 - Audit and review events where applicable
+- MCP registry lookup and tool execution traces
 
 Tracing is especially valuable for diagnosing slow or expensive prompts.
 
@@ -135,6 +142,7 @@ Health monitoring should include:
 - Dependency checks for database, vector store, Kafka, and model providers
 - Synthetic prompts for canary validation
 - Alerting on provider degradation, excessive fallback, and training worker failures
+- Alerting on MCP server failures, elevated latency, and tool denial spikes
 - Readiness checks before rolling or blue-green promotion
 - Backup job and restore validation status
 
@@ -146,6 +154,7 @@ Audit events should be observable alongside application telemetry so operators c
 - Prompt changes with quality regressions
 - Provider changes with cost shifts
 - Release promotions with operational incidents
+- MCP policy changes with tool execution failures
 
 ## Why This Design
 
