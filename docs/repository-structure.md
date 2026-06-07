@@ -2,13 +2,19 @@
 
 ## Design Goals
 
-The repository should separate user-facing application code, domain services, agent implementations, learning and training pipelines, deployment assets, and documentation. This keeps the platform understandable as it grows.
+The repository should support the first runnable MVP without premature service sprawl. The structure should make it easy to build a modular monolith now while preserving a clean path to future extraction if the platform grows.
 
 ## Recommended Tree
 
 ```text
 open-intelligence-platform/
 ├── README.md
+├── LICENSE
+├── CONTRIBUTING.md
+├── CODE_OF_CONDUCT.md
+├── SECURITY.md
+├── .editorconfig
+├── .gitignore
 ├── frontend/
 │   ├── apps/
 │   │   └── web/
@@ -18,60 +24,42 @@ open-intelligence-platform/
 │   │   └── api-client/
 │   └── tests/
 ├── backend/
-│   ├── gateway/
-│   ├── auth-service/
-│   ├── workspace-service/
-│   ├── conversation-service/
-│   ├── knowledge-service/
-│   ├── learning-service/
-│   ├── agent-orchestrator/
-│   ├── model-router/
-│   ├── training-service/
-│   ├── provider-adapters/
-│   │   ├── ollama-adapter/
-│   │   ├── vllm-adapter/
-│   │   ├── openai-adapter/
-│   │   ├── anthropic-adapter/
-│   │   ├── gemini-adapter/
-│   │   ├── openrouter-adapter/
-│   │   └── deepseek-adapter/
-│   └── shared/
-│       ├── domain/
-│       ├── security/
-│       ├── observability/
-│       └── messaging/
-├── agents/
-│   ├── coding-agent/
-│   ├── architecture-agent/
-│   ├── documentation-agent/
-│   ├── kt-agent/
-│   ├── risk-agent/
-│   └── operations-agent/
-├── training/
-│   ├── dataset-builder/
-│   ├── evaluation/
-│   ├── fine-tuning/
-│   └── model-registry/
-├── knowledge/
-│   ├── connectors/
-│   ├── ingestion/
-│   ├── chunking/
-│   ├── embeddings/
-│   ├── retrieval/
-│   └── schemas/
+│   └── oip-server/
+│       ├── src/
+│       │   ├── main/
+│       │   │   ├── java/
+│       │   │   │   └── com/oip/
+│       │   │   │       ├── api/
+│       │   │   │       ├── knowledge/
+│       │   │   │       ├── memory/
+│       │   │   │       ├── routing/
+│       │   │   │       ├── providers/
+│       │   │   │       ├── persistence/
+│       │   │   │       └── shared/
+│       │   │   └── resources/
+│       │   │       └── db/migration/
+│       │   └── test/
+│       ├── build.gradle.kts
+│       └── settings.gradle.kts
 ├── deployment/
 │   ├── docker-compose/
-│   ├── k8s/
-│   ├── helm/
-│   ├── monitoring/
-│   └── scripts/
+│   ├── docker/
+│   ├── scripts/
+│   └── monitoring/
 ├── docs/
+│   ├── adr/
+│   │   ├── 0001-platform-scope.md
+│   │   ├── 0002-local-and-cloud-model-routing.md
+│   │   ├── 0003-rag-before-fine-tuning.md
+│   │   └── 0004-spring-boot-and-nextjs.md
 │   ├── architecture.md
 │   ├── agent-framework.md
 │   ├── deployment.md
 │   ├── domain-model.md
 │   ├── knowledge-management.md
 │   ├── learning-pipeline.md
+│   ├── memory-layer.md
+│   ├── mvp.md
 │   ├── model-routing.md
 │   ├── observability.md
 │   ├── openapi.md
@@ -82,16 +70,20 @@ open-intelligence-platform/
 │   ├── technology-stack.md
 │   └── vision.md
 └── .github/
+    ├── markdown-link-check-config.json
     ├── workflows/
+    │   └── docs-check.yml
     └── ISSUE_TEMPLATE/
 ```
 
 ## Why This Structure
 
 - `frontend/` isolates user experience concerns and reusable UI packages.
-- `backend/` groups platform services while keeping provider adapters replaceable.
-- `agents/` keeps specialized agent logic visible and independently evolvable.
-- `training/` separates asynchronous ML operations from online request handling.
-- `knowledge/` keeps ingestion and retrieval concerns modular.
+- `backend/oip-server/` keeps the MVP deployable as one application while maintaining clear internal module boundaries.
 - `deployment/` supports both local and enterprise operations.
 - `docs/` keeps architecture and implementation intent close to the codebase.
+- `.github/` holds lightweight repository automation for documentation quality.
+
+## Evolution Path
+
+This structure is intentionally MVP-first. Future phases may introduce additional backend services, agent packages, training pipelines, and Kubernetes assets, but only after the modular monolith has proven the boundaries that deserve extraction.

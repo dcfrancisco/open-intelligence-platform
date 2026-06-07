@@ -4,6 +4,8 @@
 
 OIP treats enterprise knowledge as a managed asset rather than a loose collection of files. The knowledge architecture must support both retrieval quality and operational accountability.
 
+Within OIP, the Memory Layer is the long-term system that preserves and organizes that knowledge over time. Knowledge management governs the content domain; memory management ensures that durable lessons, decisions, relationships, and history remain accessible even as models, prompts, and teams change.
+
 ## Knowledge Domains
 
 OIP supports the following first-class knowledge types:
@@ -54,6 +56,8 @@ Knowledge records must carry effective dates, last review dates, and freshness s
 7. Run quality checks for duplicates, staleness, and metadata gaps.
 8. Publish change events so downstream learning and agent workflows can react.
 
+These ingestion flows should also emit memory candidates into the Memory Layer so project history, engineering lessons, and organizational procedures become reusable long-term memory instead of isolated documents.
+
 ## Knowledge Flow
 
 ```mermaid
@@ -62,10 +66,13 @@ flowchart LR
     Intake --> Classify[Classification and Sensitivity Tagging]
     Classify --> Enrich[Ownership, SME, Escalation, and Domain Enrichment]
     Enrich --> Canonical[Canonical Knowledge Store]
+    Enrich --> MemoryLayer[Memory Layer]
     Enrich --> Chunking[Chunking and Embeddings]
     Chunking --> Vector[(Vector Store)]
     Canonical --> Relational[(PostgreSQL)]
     Canonical --> Events[Knowledge Change Events]
+    MemoryLayer --> Relational
+    MemoryLayer --> Retrieval
     Vector --> Retrieval[Retrieval Layer]
     Relational --> Retrieval
     Events --> Learning[Continuous Learning Pipeline]

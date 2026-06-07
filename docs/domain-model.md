@@ -2,7 +2,7 @@
 
 ## Overview
 
-The OIP domain model separates platform identity, knowledge assets, AI interactions, model infrastructure, and governance records. This structure keeps user-facing workflows clear while allowing the platform to evolve from a single-user environment into a multi-team system.
+The OIP domain model separates platform identity, memory assets, knowledge assets, AI interactions, model infrastructure, and governance records. This structure keeps user-facing workflows clear while allowing the platform to evolve from a single-user environment into a multi-team system.
 
 ## Entity Relationship Diagram
 
@@ -10,9 +10,17 @@ The OIP domain model separates platform identity, knowledge assets, AI interacti
 erDiagram
     User ||--o{ Workspace : belongs_to
     Workspace ||--o{ KnowledgeBase : contains
+    Workspace ||--o{ MemoryCollection : owns
     KnowledgeBase ||--o{ Document : stores
     Document ||--o{ Chunk : split_into
     Chunk ||--|| Embedding : represented_by
+    MemoryCollection ||--o{ Memory : groups
+    Memory ||--o{ MemoryEntry : contains
+    MemoryEntry }o--|| MemorySource : originated_from
+    MemoryEntry ||--o{ MemoryRelationship : links
+    MemoryEntry ||--o{ MemoryTag : labeled_by
+    MemoryEntry ||--o{ MemoryFeedback : reviewed_by
+    MemoryEntry ||--o{ MemorySnapshot : versioned_as
     Workspace ||--o{ Conversation : has
     Conversation ||--o{ Prompt : includes
     Prompt ||--o{ Response : receives
@@ -25,6 +33,7 @@ erDiagram
     Model ||--o{ FineTuneJob : target_model
     Conversation ||--o{ Feedback : collects
     Response ||--o{ Feedback : evaluated_by
+    User ||--o{ MemoryFeedback : provides
     User ||--o{ AuditEvent : creates
     Workspace ||--o{ AuditEvent : records
 
@@ -45,6 +54,53 @@ erDiagram
         string name
         string scope
         string retentionPolicy
+    }
+    MemoryCollection {
+        uuid id
+        string name
+        string memoryLevel
+        string isolationMode
+    }
+    Memory {
+        uuid id
+        string title
+        string memoryType
+        string classification
+    }
+    MemoryEntry {
+        uuid id
+        string entryType
+        text content
+        datetime effectiveAt
+    }
+    MemoryRelationship {
+        uuid id
+        string relationshipType
+        string targetRef
+        datetime createdAt
+    }
+    MemoryTag {
+        uuid id
+        string tagName
+        string tagType
+    }
+    MemoryFeedback {
+        uuid id
+        int rating
+        string disposition
+        text notes
+    }
+    MemorySource {
+        uuid id
+        string sourceType
+        string sourceRef
+        string owner
+    }
+    MemorySnapshot {
+        uuid id
+        string snapshotVersion
+        datetime capturedAt
+        string checksum
     }
     Document {
         uuid id
@@ -142,6 +198,18 @@ A user can belong to multiple workspaces because consultants, delivery leads, an
 ### Workspace and KnowledgeBase
 
 A workspace can contain one or more knowledge bases so teams can separate product, client, operations, or regulatory content without duplicating platform infrastructure.
+
+### Workspace and MemoryCollection
+
+A workspace can contain multiple memory collections because project memory, development memory, and organizational memory often have different sharing and governance rules. Memory collections allow OIP to preserve durable knowledge without forcing every memory artifact into one global pool.
+
+### MemoryCollection, Memory, and MemoryEntry
+
+A memory collection groups related memory assets. Each memory record represents a long-lived topic such as a project decision, engineering pattern, operational lesson, or escalation path. Memory entries capture the evolving facts, updates, and supporting details within that memory.
+
+### MemorySource, MemoryRelationship, MemoryTag, MemoryFeedback, and MemorySnapshot
+
+Memory sources preserve provenance to documents, conversations, repositories, incidents, ADRs, and reviews. Memory relationships link related memories together. Tags support classification and discovery. Feedback helps improve memory quality. Snapshots preserve historical states so memory can evolve without losing traceability.
 
 ### KnowledgeBase, Document, Chunk, and Embedding
 

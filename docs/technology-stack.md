@@ -1,5 +1,13 @@
 # Technology Stack
 
+OIP uses an enterprise-capable, open-source-friendly stack that works across three deployment tiers:
+
+- Developer or solo deployment
+- Team or small business deployment
+- Enterprise or production deployment
+
+The goal is not to optimize only for local experimentation. The stack must let a contributor start quickly while giving platform teams a credible path to secure, governed, production operations.
+
 ## Frontend
 
 ### React
@@ -8,7 +16,7 @@
 
 ### Next.js
 
-`Next.js` is recommended because it supports authenticated application flows, server-side rendering, route-based code organization, and strong developer productivity. It is a practical choice for a platform UI rather than a static site.
+`Next.js` is recommended because it supports authenticated application flows, server-side rendering, route-based code organization, and strong developer productivity. It is a practical choice for a platform UI rather than a static site and scales well from a small chat interface to an enterprise administration and operations console.
 
 ## Backend
 
@@ -18,13 +26,13 @@
 
 ### Spring Boot
 
-`Spring Boot` is recommended because it offers mature patterns for API design, configuration, dependency injection, security, observability, and service modularity. It also aligns well with organizations that want maintainable, production-grade backend services.
+`Spring Boot` is recommended because it offers mature patterns for API design, configuration, dependency injection, security, observability, and service modularity. It also aligns well with organizations that want maintainable, production-grade backend services, environment promotion, and long-lived platform governance.
 
 ## AI
 
 ### Ollama
 
-`Ollama` is a strong local inference choice for developers and lightweight self-hosted environments. It is easy to set up and supports practical local model experimentation.
+`Ollama` is a strong local inference choice for developers and lightweight self-hosted environments. It is easy to set up and supports practical local model experimentation, private knowledge use, and developer-first adoption.
 
 ### vLLM
 
@@ -44,13 +52,27 @@
 
 ### PostgreSQL
 
-`PostgreSQL` should be the primary transactional database because it is reliable, open-source, extensible, and well understood. OIP can use it for platform metadata, knowledge records, workflow state, configuration, and even vector storage when using `pgvector`.
+`PostgreSQL` should be the primary transactional database because it is reliable, open-source, extensible, and well understood. OIP can use it for platform metadata, knowledge records, workflow state, configuration, audit records, registries, and even vector storage when using `pgvector`.
 
 ## Messaging
 
 ### Kafka
 
-`Kafka` is recommended for asynchronous event flows such as ingestion, learning, dataset generation, training orchestration, audit propagation, and cross-product integration. It supports durable decoupling between services and products.
+`Kafka` is recommended for asynchronous event flows such as ingestion, learning, dataset generation, training orchestration, audit propagation, policy events, and cross-product integration. It supports durable decoupling between services and products.
+
+## Security and Identity
+
+### OIDC and SAML-Compatible Identity Providers
+
+Enterprise identity providers are recommended for SSO, lifecycle management, and centralized access policy. OIP should integrate cleanly with OIDC providers and support SAML federation patterns where required.
+
+### LDAP and Active Directory
+
+LDAP or Active Directory integration is important for organizations that still use directory-backed group and user management. This helps OIP fit existing enterprise identity landscapes instead of forcing greenfield assumptions.
+
+### Secrets Management
+
+Use local environment-backed secrets for developer installs and enterprise secret managers for production. This split keeps local setup simple while matching enterprise expectations for rotation, auditability, and scoped access.
 
 ## Observability
 
@@ -66,6 +88,20 @@
 
 `Grafana` gives unified dashboards for metrics, logs, and traces and is widely adopted by both small and large operations teams.
 
+## Enterprise Integrations
+
+OIP should be designed to integrate with:
+
+- GitHub, GitLab, and Bitbucket
+- Jira and Azure DevOps
+- Confluence and SharePoint
+- Slack and Teams
+- ServiceNow
+- Kubernetes
+- OpenTelemetry-based observability backends
+
+These integrations are strategic because enterprise value comes from connecting AI to real delivery, knowledge, and operational systems.
+
 ## Containers and Orchestration
 
 ### Docker
@@ -74,11 +110,11 @@
 
 ### Kubernetes
 
-`Kubernetes` is the recommended enterprise runtime because it supports scaling, scheduling, isolation, rollout control, and operational consistency for distributed AI workloads.
+`Kubernetes` is the recommended enterprise runtime because it supports scaling, scheduling, isolation, rollout control, blue-green or rolling deployment patterns, and operational consistency for distributed AI workloads.
 
 ## Why This Stack
 
 - It is open-source friendly and production-proven.
 - It supports both small and large deployments.
 - It minimizes forced vendor dependencies.
-- It matches the platform's need for modularity, observability, and long-term maintainability.
+- It matches the platform's need for modularity, observability, governance, and long-term maintainability.

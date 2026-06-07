@@ -1,89 +1,222 @@
 # Roadmap
 
-## Phase 1: AI Workspace
+OIP grows in stages from open-source foundation to enterprise production operations. The platform stays simple to start, but each phase is designed to unlock the next level of governance, scale, and organizational value.
+
+Memory is a cross-cutting platform capability across the entire roadmap. OIP is not only an AI platform. It is a private AI development platform with organizational memory.
+
+## Phase 0: Open Source Foundation
 
 ### Objectives
 
-- Establish the core user workspace experience
-- Enable chat, prompt management, and model access
-- Support local and cloud providers behind a unified API
+- Publish a GitHub-ready architecture package
+- Establish project governance and contribution rules
+- Create a stable foundation for open-source collaboration
 
 ### Deliverables
 
-- Web UI with authentication
-- Workspace, conversation, and prompt APIs
-- Initial model router with policy support
-- Local `Ollama` integration
-- Cloud provider adapters for at least one premium provider
+- GitHub-ready docs
+- License
+- Contribution guide
+- Security policy
+- Architecture decision records
+- Project governance
 
-## Phase 2: Knowledge Platform
+## Phase 1: Developer AI Workspace
 
 ### Objectives
 
-- Build the canonical knowledge layer
-- Enable ingestion, chunking, embeddings, and retrieval
-- Support enterprise knowledge types beyond flat documents
+- Deliver the first runnable end-to-end product slice
+- Prove local-first private AI with optional cloud augmentation
+- Create the foundation for enterprise-grade capabilities later
 
 ### Deliverables
 
-- Knowledge base service
-- Document ingestion pipeline
-- RAG retrieval path with citations
-- Metadata model for incidents, runbooks, KT sessions, ADRs, SMEs, ownership, and escalations
+- Local `Ollama`
+- OpenAI-compatible provider
+- Basic chat UI
+- Basic RAG
+- Document ingestion
+- Project Memory
+- Source attribution
+- Project collections
+- `PostgreSQL` plus `pgvector`
+- Docker Compose
 
-## Phase 3: Agent Framework
+## Phase 2: Team Knowledge Platform
 
 ### Objectives
 
-- Introduce orchestrated multi-agent workflows
-- Add tool use and governed execution
-- Deliver role-based agents for high-value tasks
+- Support shared usage by teams and small businesses
+- Introduce collaborative knowledge boundaries and user management
+- Add early operational visibility and shared configuration
 
 ### Deliverables
 
-- Agent orchestrator
-- Coding, architecture, documentation, KT, risk, and operations agents
-- Approval and audit controls for tool execution
+- Workspaces
+- Users and roles
+- Shared knowledge bases
+- Source attribution
+- Conversation history
+- Provider configuration
+- Usage tracking
+- Development Memory
+- Reusable patterns
+- Lessons learned
+- Coding conventions
+- Architecture guidance
 
-## Phase 4: Organizational Intelligence
+## Phase 3: Enterprise AI Control Plane
 
 ### Objectives
 
-- Connect knowledge, people, and operational accountability
-- Turn isolated project content into reusable organization-wide intelligence
+- Add enterprise security, governance, and cost control
+- Provide governed access to providers, models, and prompts
+- Create policy-driven routing and auditability
 
 ### Deliverables
 
-- SME and ownership mapping
-- Escalation graph
-- Cross-workspace knowledge discovery rules
-- Integration contracts for Delivery Wizard, PortalOps AI, EventEase, and WorkTime
+- SSO and OIDC
+- RBAC and ABAC
+- Provider registry
+- Model registry
+- Prompt registry
+- Routing policies
+- Audit logs
+- Quotas and budgets
 
-## Phase 5: Continuous Learning
+## Phase 4: Agentic Delivery Platform
 
 ### Objectives
 
-- Learn from interactions, feedback, and operations
-- Improve retrieval quality continuously
-- Build trusted curation pipelines for reusable insight
+- Introduce governed multi-agent execution for delivery workflows
+- Add approval and tool-execution controls
+- Support high-value engineering and delivery use cases
 
 ### Deliverables
 
-- Interaction capture
-- Feedback and correction workflows
-- Knowledge extraction pipeline
-- Versioned learning datasets
+- Coding agent
+- Architecture agent
+- Documentation agent
+- KT agent
+- Risk agent
+- Operations agent
+- Approval workflows
+- Tool execution controls
 
-## Phase 6: Fine-Tuning Factory
+## Phase 5: Organizational Intelligence
 
 ### Objectives
 
-- Turn curated data into specialized model improvements
-- Operationalize training, evaluation, and model promotion
+- Connect people, ownership, knowledge, and operational memory
+- Convert project artifacts into reusable institutional intelligence
 
 ### Deliverables
 
+- SME directory
+- Ownership maps
+- Escalation paths
+- Decision records
+- Project memory
+- Incident learning
+- KT lifecycle
+- Organizational Memory
+
+## Phase 6: Continuous Learning Platform
+
+### Objectives
+
+- Learn from interactions and feedback safely
+- Build repeatable quality and regression mechanisms
+- Separate knowledge learning from model training
+
+### Deliverables
+
+- Feedback capture
+- Knowledge extraction
+- Evaluation datasets
 - Dataset builder
-- Fine-tune orchestration
-- Evaluation and registry flows
-- Policy-based release of fine-tuned models into the router
+- Learning pipeline
+- Quality scoring
+- Regression testing for prompts and models
+- Memory Analytics
+- Knowledge gaps
+- Stale knowledge detection
+- Duplicate knowledge detection
+- Memory quality scoring
+
+## Phase 7: Fine-Tuning Factory
+
+### Objectives
+
+- Operationalize domain adaptation with governed release flows
+- Manage training datasets, model versions, and rollback safely
+- Add release gates before production promotion
+
+### Deliverables
+
+- Training dataset management
+- LoRA fine-tuning
+- Model versioning
+- Model promotion workflow
+- Rollback
+- Safety evaluation
+- Production release gates
+
+## Phase 8: Enterprise Production Operations
+
+### Objectives
+
+- Make OIP production-ready for enterprise environments
+- Formalize resilience, recovery, and operational hardening
+- Support platform teams operating OIP at scale
+
+### Deliverables
+
+- Kubernetes deployment
+- HA architecture
+- Backup and restore
+- Disaster recovery
+- Observability dashboards
+- Runbooks
+- Security hardening
+- Compliance support
+
+## Memory Layer Roadmap
+
+The Memory Layer evolves as a reusable platform capability that can serve Delivery Wizard, PortalOps AI, EventEase AI, WorkTime AI, and future products without architectural redesign.
+
+## Phase 1: Project Memory
+
+### Capabilities
+
+- Document ingestion
+- Document retrieval
+- Source attribution
+- Project collections
+
+## Phase 2: Development Memory
+
+### Capabilities
+
+- Reusable patterns
+- Lessons learned
+- Coding conventions
+- Architecture guidance
+
+## Phase 3: Organizational Memory
+
+### Capabilities
+
+- SME mapping
+- Ownership mapping
+- Escalation paths
+- KT lifecycle
+
+## Phase 4: Memory Analytics
+
+### Capabilities
+
+- Knowledge gaps
+- Stale knowledge detection
+- Duplicate knowledge detection
+- Memory quality scoring

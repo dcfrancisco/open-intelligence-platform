@@ -1,0 +1,12 @@
+{
+  "ignorePatterns": [
+    {
+      "pattern": "^https://"
+    },
+    {
+      "pattern": "^http://"
+    }
+  ],
+  "replacementPatterns": [],
+  "timeout": "20s"
+}
