@@ -2,7 +2,9 @@
 
 Open Intelligence Platform treats MCP as a first-class platform capability. MCP is not a plugin model. It is the governed integration backbone that allows models, agents, and future OIP products to interact with tools, enterprise systems, repositories, databases, APIs, and internal platform services.
 
-OIP is a Private AI Development Platform with Memory, Model Routing, Agent Framework, and MCP Integration.
+OIP is a Private AI Development Platform with Memory.
+
+Private First. Cloud Optional. Vendor Neutral.
 
 ## MCP Design Principles
 
@@ -13,6 +15,7 @@ OIP is a Private AI Development Platform with Memory, Model Routing, Agent Frame
 - Tool access must be controlled by policies
 - OIP must support both internal and external MCP servers
 - Future OIP products must reuse the same MCP infrastructure
+- MCP is model-independent infrastructure
 
 ## MCP Platform Services
 
@@ -22,6 +25,20 @@ OIP is a Private AI Development Platform with Memory, Model Routing, Agent Frame
 - `MCP Policy Service`
 - `MCP Audit Service`
 - `MCP Monitoring Service`
+
+## Model Independence
+
+The MCP layer is independent of the selected model.
+
+Whether OIP uses:
+
+- `Qwen`
+- `DeepSeek`
+- `Llama`
+- `GPT`
+- `Claude`
+
+the MCP layer remains unchanged. Tool integration, policy enforcement, audit, and monitoring should not depend on which model generated the tool request.
 
 ## MCP Service Topology
 
@@ -160,6 +177,8 @@ The MCP governance model supports:
 - Tool usage tracking
 
 Governance ensures MCP servers are not treated as unmanaged integrations. Each server and tool should have an owner, certification state, allowed workspace set, and lifecycle status.
+
+MCP ownership remains with the organization. Users retain control of MCP integrations, credentials, policies, and workflows rather than embedding those dependencies inside any single provider or assistant.
 
 ```mermaid
 flowchart TD

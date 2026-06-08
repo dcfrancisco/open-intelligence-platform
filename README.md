@@ -4,7 +4,7 @@
 
 ## Overview
 
-Open Intelligence Platform (OIP) is a Private AI Development Platform with Memory, Model Routing, Agent Framework, and MCP Integration. It is an open-source platform for building private, provider-neutral AI environments with a first-class organizational memory layer. It combines knowledge management, retrieval-augmented generation, agentic workflows, coding assistance, continuous learning, fine-tuning pipelines, durable memory, and MCP-based tool integration in one extensible architecture.
+Open Intelligence Platform (OIP) is a Private AI Development Platform with Memory. It is an open-source platform for building private, provider-neutral AI environments with a first-class organizational memory layer. It combines knowledge management, retrieval-augmented generation, durable memory, model routing, governance, MCP-based tool integration, and model abstraction across local and cloud AI providers in one extensible architecture.
 
 OIP is designed for developers, consultants, students, small businesses, delivery organizations, and enterprise teams that want AI capabilities without being locked into a single vendor or cloud.
 
@@ -16,7 +16,11 @@ The platform supports three deployment tiers:
 
 OIP is intentionally simple to start, but its architecture is designed to grow into enterprise-grade security, governance, operations, and integration requirements without redesigning the platform core.
 
+Private First. Cloud Optional. Vendor Neutral.
+
 The Memory Layer is the long-term knowledge system of OIP. Models may change over time, but organizational knowledge, engineering decisions, project history, and lessons learned remain preserved and continuously accessible.
+
+Users retain ownership of knowledge, memory, documents, models, agents, MCP integrations, and workflows. Cloud providers are enhancements, not dependencies.
 
 The MCP layer serves as the standardized tool integration backbone for all current and future OIP products including Delivery Wizard, PortalOps AI, EventEase AI, and WorkTime AI.
 
@@ -38,11 +42,28 @@ The next milestone remains the broader runnable MVP described in [docs/mvp.md](d
 
 OIP exists to make advanced AI systems practical, sovereign, and cost-governed. The platform gives teams a way to run local models when privacy or cost matters, use cloud models when capability or scale matters, and keep organizational knowledge under their own control.
 
-OIP is not only an AI platform. It is a Private AI Development Platform with Memory, Model Routing, Agent Framework, and MCP Integration.
+OIP is a private AI development platform providing memory, knowledge, routing, governance, MCP integration, and model abstraction across local and cloud AI providers.
+
+## Private AI Strategy
+
+Local models are the preferred default.
+
+- Local runtimes: `Ollama`, `vLLM`
+- Recommended local models: `Qwen Coder`, `DeepSeek Coder`, `Llama`, `Mistral`
+
+Cloud models are optional. Organizations can operate entirely on private infrastructure, keep sensitive information local, and add governed cloud providers only when they choose to.
+
+Rationale:
+
+- Cost control through local inference and selective cloud use
+- Privacy by keeping sensitive knowledge and memory on private infrastructure
+- Governance through local ownership of models, memory, and routing policy
+- Availability through reduced dependency on external provider uptime
+- Vendor independence through model and provider abstraction
 
 ## Features
 
-- Local and cloud model support through a unified routing layer
+- Local-first and cloud-optional model support through a unified routing layer
 - First-class Memory Layer for preserving project, development, and organizational knowledge
 - MCP integration backbone for tools, enterprise systems, repositories, databases, APIs, and future OIP services
 - Retrieval-augmented generation for private knowledge bases
@@ -60,6 +81,7 @@ OIP is not only an AI platform. It is a Private AI Development Platform with Mem
 - Avoid vendor lock-in by abstracting model providers, vector stores, and deployment topologies
 - Reduce cost by routing requests to the least expensive model that meets task requirements
 - Improve privacy by running sensitive workloads locally
+- Operate fully on private infrastructure when external AI providers are not acceptable
 - Preserve institutional knowledge in a structured, searchable, continuously improving system
 - Keep project history, engineering decisions, and lessons learned available even as models and providers change
 - Support both individual productivity and enterprise-scale operations with the same platform model
@@ -71,13 +93,55 @@ OIP uses a layered architecture:
 
 - A `Next.js` web application provides the user experience for workspaces, knowledge, agents, and operations.
 - A `Spring Boot` API layer exposes versioned APIs and enforces authentication, authorization, rate limits, quotas, and policy.
-- Core services handle identity, workspaces, memory, knowledge ingestion and retrieval, model routing, provider and model registries, prompt governance, evaluation, cost governance, continuous learning, and training.
 - Core services handle identity, workspaces, memory, knowledge ingestion and retrieval, model routing, provider and model registries, prompt governance, MCP governance, evaluation, cost governance, continuous learning, and training.
 - Model providers are pluggable and support local runtimes such as `Ollama` and `vLLM`, as well as cloud providers such as `OpenAI`, `Anthropic`, `Google Gemini`, `OpenRouter`, and `DeepSeek`.
 - Platform state is stored in `PostgreSQL`, vectors in `pgvector` or `ChromaDB`, and events in `Kafka`.
 - Observability is implemented with `OpenTelemetry`, `Prometheus`, and `Grafana`, with audit and AI usage signals treated as first-class telemetry.
 
 This architecture is intentionally extensible so future products such as Delivery Wizard, PortalOps AI, EventEase AI, and WorkTime AI can integrate through stable APIs, events, shared identity, memory services, MCP infrastructure, and optional domain adapters without redesigning the platform core.
+
+## Developer Tool Positioning
+
+OIP is not positioned as a replacement for `GitHub Copilot`, `Cursor`, `Claude Code`, `Codex`, `JetBrains AI Assistant`, or `Continue.dev`.
+
+OIP serves those tools as:
+
+- Memory Layer
+- Knowledge Layer
+- MCP Layer
+- Routing Layer
+- Governance Layer
+
+```mermaid
+flowchart TD
+    Developer[Developer] --> Tool[Copilot, Cursor, Codex, Claude Code, Continue.dev]
+    Tool --> OIP[OIP]
+    OIP --> Memory[Memory Layer]
+    OIP --> MCP[MCP Layer]
+    OIP --> Routing[Routing Layer]
+    OIP --> Models[Local and Optional Cloud Models]
+```
+
+## Enterprise Deployment Modes
+
+1. Fully Private
+
+- Local models
+- Private infrastructure
+- No external AI providers
+
+2. Hybrid
+
+- Local models
+- Selective cloud usage
+
+3. Enterprise Cloud
+
+- Governed cloud providers
+- Enterprise policies
+- Audit controls
+
+Each mode uses the same memory, routing, governance, and MCP architecture. The difference is deployment policy, not product redesign.
 
 ## Quick Start
 
@@ -188,6 +252,7 @@ These remain part of the broader architecture and roadmap, but not the first run
 - [docs/domain-model.md](docs/domain-model.md)
 - [docs/knowledge-management.md](docs/knowledge-management.md)
 - [docs/model-routing.md](docs/model-routing.md)
+- [docs/developer-integrations.md](docs/developer-integrations.md)
 - [docs/learning-pipeline.md](docs/learning-pipeline.md)
 - [docs/build-plan.md](docs/build-plan.md)
 - [docs/implementation-principles.md](docs/implementation-principles.md)

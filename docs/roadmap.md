@@ -4,6 +4,10 @@ OIP grows in stages from open-source foundation to enterprise production operati
 
 Memory is a cross-cutting platform capability across the entire roadmap. OIP is not only an AI platform. It is a private AI development platform with organizational memory.
 
+Private First. Cloud Optional. Vendor Neutral.
+
+Cloud providers are optional across all phases.
+
 ## Phase 0: Open Source Foundation
 
 ### Objectives
@@ -11,6 +15,7 @@ Memory is a cross-cutting platform capability across the entire roadmap. OIP is 
 - Publish a GitHub-ready architecture package
 - Establish project governance and contribution rules
 - Create a stable foundation for open-source collaboration
+- Preserve local deployment and vendor-neutral architecture from the start
 
 ### Deliverables
 
@@ -28,6 +33,7 @@ Memory is a cross-cutting platform capability across the entire roadmap. OIP is 
 - Deliver the first runnable end-to-end product slice
 - Prove local-first private AI with optional cloud augmentation
 - Create the foundation for enterprise-grade capabilities later
+- Keep full local and private operation viable without external AI providers
 
 ### Deliverables
 
@@ -42,6 +48,8 @@ Memory is a cross-cutting platform capability across the entire roadmap. OIP is 
 - `PostgreSQL` plus `pgvector`
 - Docker Compose
 
+Phase note: Phase 1 must remain usable with private models only. Cloud providers stay optional.
+
 ## Phase 2: Team Knowledge Platform
 
 ### Objectives
@@ -49,6 +57,7 @@ Memory is a cross-cutting platform capability across the entire roadmap. OIP is 
 - Support shared usage by teams and small businesses
 - Introduce collaborative knowledge boundaries and user management
 - Add early operational visibility and shared configuration
+- Preserve workspace-owned memory and vendor-neutral routing policy
 
 ### Deliverables
 
@@ -72,6 +81,7 @@ Memory is a cross-cutting platform capability across the entire roadmap. OIP is 
 - Add enterprise security, governance, and cost control
 - Provide governed access to providers, models, and prompts
 - Create policy-driven routing and auditability
+- Preserve private deployment and local model operation as a first-class mode
 
 ### Deliverables
 
@@ -91,6 +101,7 @@ Memory is a cross-cutting platform capability across the entire roadmap. OIP is 
 - Introduce governed multi-agent execution for delivery workflows
 - Add approval and tool-execution controls
 - Support high-value engineering and delivery use cases
+- Keep agent execution compatible with local models and model-independent MCP integration
 
 ### Deliverables
 
@@ -110,6 +121,7 @@ Memory is a cross-cutting platform capability across the entire roadmap. OIP is 
 - Introduce MCP as the standardized tool integration layer for agents and future products
 - Govern internal and external MCP servers consistently
 - Create reusable enterprise connectors without embedding tool logic into product code
+- Keep MCP independent of the selected model or provider
 
 ### Deliverables
 
@@ -127,6 +139,7 @@ Memory is a cross-cutting platform capability across the entire roadmap. OIP is 
 
 - Connect people, ownership, knowledge, and operational memory
 - Convert project artifacts into reusable institutional intelligence
+- Preserve private memory growth regardless of provider or assistant changes
 
 ### Deliverables
 
@@ -146,6 +159,7 @@ Memory is a cross-cutting platform capability across the entire roadmap. OIP is 
 - Learn from interactions and feedback safely
 - Build repeatable quality and regression mechanisms
 - Separate knowledge learning from model training
+- Keep learning pipelines usable in private-only deployments
 
 ### Deliverables
 
@@ -169,6 +183,7 @@ Memory is a cross-cutting platform capability across the entire roadmap. OIP is 
 - Operationalize domain adaptation with governed release flows
 - Manage training datasets, model versions, and rollback safely
 - Add release gates before production promotion
+- Keep fine-tuning optional and preserve memory as the primary long-lived asset
 
 ### Deliverables
 
@@ -187,6 +202,7 @@ Memory is a cross-cutting platform capability across the entire roadmap. OIP is 
 - Make OIP production-ready for enterprise environments
 - Formalize resilience, recovery, and operational hardening
 - Support platform teams operating OIP at scale
+- Preserve support for fully private, hybrid, and governed cloud operating modes
 
 ### Deliverables
 

@@ -4,6 +4,7 @@
 
 - Provider neutrality: model providers, vector stores, and runtimes are abstracted behind stable interfaces
 - Local-first optionality: the platform can prioritize local execution without excluding cloud augmentation
+- Private first: the platform must be operable using private infrastructure and local models only
 - API-first design: every major capability is exposed through versioned APIs and events
 - Separation of concerns: knowledge learning, agent execution, and model training are independent pipelines
 - Memory as a platform layer: durable memory is a core capability distinct from model inference and model training
@@ -12,6 +13,8 @@
 - Extensibility by contract: future products integrate through APIs, events, shared identity, and domain adapters rather than core rewrites
 - Tiered deployment: the same architecture supports developer, team, and enterprise production deployments
 - Governance by design: identity, policy, audit, registry, evaluation, and cost controls are platform services, not add-ons
+
+Private First. Cloud Optional. Vendor Neutral.
 
 ## High-Level Architecture
 
@@ -215,6 +218,8 @@ Own ingestion, chunking, embedding generation, indexing, retrieval, reranking, m
 
 Selects the best provider and model for each task using policy, cost, latency, availability, capability, safety, workspace preference, and fallback rules. The routing layer is central to vendor independence, cost control, and operational resilience.
 
+Default policy should prefer local models first, then approved enterprise models, then optional cloud providers if policy allows.
+
 ### Provider Registry
 
 Maintains the catalog of configured providers, endpoints, capabilities, credentials references, health metadata, and allowed usage scopes. It allows enterprise teams to govern which providers are available in which environments and workspaces.
@@ -239,9 +244,11 @@ Tracks token usage, provider spending, workspace attribution, quotas, budgets, a
 
 Host models within user-controlled infrastructure. `Ollama` is suitable for developer friendliness and local experimentation. `vLLM` is suitable for higher-throughput inference, GPU serving, and enterprise-grade local model hosting.
 
+Recommended local model families include `Qwen Coder`, `DeepSeek Coder`, `Llama`, and `Mistral`.
+
 ### Cloud Model Providers
 
-Provide access to premium capabilities when reasoning quality, multimodality, or scale demands it. Supporting multiple cloud providers keeps negotiation leverage and protects against pricing or availability shifts.
+Provide optional access to premium capabilities when reasoning quality, multimodality, or scale demands it and policy allows it. Supporting multiple cloud providers keeps negotiation leverage and protects against pricing or availability shifts.
 
 ### Training Services
 
@@ -267,6 +274,7 @@ Collects logs, metrics, traces, health signals, AI usage telemetry, and audit-co
 
 - It supports both simple and advanced deployments without changing the core design.
 - It preserves organizational memory as a stable system even when models, prompts, or providers evolve.
+- It allows fully private operation without any external AI provider dependency.
 - It standardizes tool access through MCP so future products can reuse one governed integration backbone.
 - It avoids embedding provider-specific logic into UI or business workflows.
 - It keeps real-time inference concerns separate from asynchronous learning and training concerns.
@@ -472,6 +480,27 @@ OIP is intentionally designed for three operating tiers:
 - Enterprise or production deployment for SSO, policy control, HA, DR, promotion workflows, and governance at scale
 
 The architecture does not force all users into enterprise complexity up front. It introduces enterprise services as first-class capabilities so the platform can grow without redesign.
+
+## Enterprise Deployment Modes
+
+### Fully Private
+
+- Local models
+- Private infrastructure
+- No external AI providers
+
+### Hybrid
+
+- Local models
+- Selective cloud usage
+
+### Enterprise Cloud
+
+- Governed cloud providers
+- Enterprise policies
+- Audit controls
+
+Each mode uses the same memory, routing, governance, and MCP architecture. Cloud providers are optional extensions to the core platform, not architectural dependencies.
 
 ## Sequence Diagrams
 

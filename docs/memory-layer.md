@@ -4,6 +4,8 @@ Open Intelligence Platform includes a first-class Memory Layer because the platf
 
 The Memory Layer is the long-term knowledge system of OIP. Models may change over time, but organizational knowledge, engineering decisions, project history, and lessons learned remain preserved and continuously accessible.
 
+Models may change over time. Memory remains.
+
 ## Memory Principles
 
 - Memory is separate from model weights
@@ -19,6 +21,14 @@ Memory preserves externalized knowledge in durable records, relationships, metad
 Model training changes model behavior by altering weights or adapters. Training can improve style, task specialization, or domain behavior, but it is slower, riskier, harder to audit, and less precise for preserving factual or organizational knowledge.
 
 OIP treats memory as the long-lived system of record for accumulated knowledge, while model training is an optional optimization path.
+
+Memory survives model changes.
+
+Memory survives provider changes.
+
+Memory survives technology shifts.
+
+Memory is a long-term organizational asset. Models are replaceable execution engines.
 
 ## Memory Levels
 

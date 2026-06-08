@@ -4,6 +4,8 @@
 
 Define the first runnable MVP clearly enough that contributors can build it without confusing target architecture with immediate implementation scope.
 
+The MVP does not change OIP positioning. OIP remains a Private AI Development Platform with Memory, with private-first local model support and optional cloud integration.
+
 ## Included in MVP
 
 - Local Docker Compose
@@ -43,6 +45,8 @@ The MVP should prove one complete path:
 ## Why These Are Excluded
 
 These capabilities matter, but they are not required to prove the first runnable product slice. The architecture is designed to support them later through the existing identity, policy, memory, routing, and operations boundaries.
+
+Cloud providers remain optional. The MVP must be usable with local and private models alone.
 
 ## MVP Success Criteria
 

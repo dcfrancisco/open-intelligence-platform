@@ -4,6 +4,8 @@
 
 OIP routes each request to the most appropriate model based on policy and runtime conditions. The routing layer is the primary mechanism for balancing privacy, cost, capability, latency, and resilience.
 
+Private First. Cloud Optional. Vendor Neutral.
+
 ## Supported Providers
 
 ### Local
@@ -20,6 +22,16 @@ OIP routes each request to the most appropriate model based on policy and runtim
 - `DeepSeek`
 
 ## Routing Criteria
+
+## Local First Routing
+
+Default routing preference:
+
+1. Local models
+2. Approved enterprise models
+3. Optional cloud providers
+
+Local models are the preferred default. Cloud routing is policy-driven and only used when explicitly allowed by workspace or enterprise policy.
 
 ### Cost
 
@@ -87,6 +99,14 @@ flowchart TD
     O --> P
 ```
 
+## Routing Examples
+
+- Coding -> `Qwen Coder Local`
+- Architecture -> local model -> cloud fallback if configured
+- Documentation -> local model -> cloud fallback if configured
+
+Cloud fallback should only occur when workspace policy, enterprise policy, and sensitivity classification allow it.
+
 ## Why Dedicated Routing Exists
 
 - It prevents provider logic from spreading across applications and agents.
@@ -103,10 +123,10 @@ Routing policies should be configurable through the frontend rather than hard-co
 
 Examples:
 
-- Coding -> Qwen Coder
-- Architecture -> GPT
-- Documentation -> Claude
-- Fallback -> DeepSeek
+- Coding -> `Qwen Coder Local`
+- Architecture -> local model, cloud fallback if configured
+- Documentation -> local model, cloud fallback if configured
+- Fallback -> approved lower-cost model or approved cloud provider
 
 These rules should be stored as managed policy data so model selection can evolve without code changes.
 
