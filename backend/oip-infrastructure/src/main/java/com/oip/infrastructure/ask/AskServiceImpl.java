@@ -15,6 +15,7 @@ import com.oip.infrastructure.audit.AuditTrailService;
 import com.oip.infrastructure.conversation.ConversationJpaRepository;
 import com.oip.infrastructure.conversation.PromptJpaRepository;
 import com.oip.infrastructure.conversation.ResponseJpaRepository;
+import com.oip.infrastructure.instruction.OipInstructionProfile;
 import com.oip.infrastructure.provider.OllamaClient;
 import java.util.List;
 import java.util.Map;
@@ -37,6 +38,7 @@ public class AskServiceImpl implements AskService {
     private final ResponseJpaRepository responseJpaRepository;
     private final AuditTrailService auditTrailService;
     private final ObjectMapper objectMapper;
+    private final OipInstructionProfile instructionProfile;
     private final int searchLimit;
 
     public AskServiceImpl(
@@ -50,6 +52,7 @@ public class AskServiceImpl implements AskService {
             ResponseJpaRepository responseJpaRepository,
             AuditTrailService auditTrailService,
             ObjectMapper objectMapper,
+            OipInstructionProfile instructionProfile,
             @Value("${oip.rag.search-limit}") int searchLimit) {
         this.vectorSearchService = vectorSearchService;
         this.contextBuilder = contextBuilder;
@@ -61,6 +64,7 @@ public class AskServiceImpl implements AskService {
         this.responseJpaRepository = responseJpaRepository;
         this.auditTrailService = auditTrailService;
         this.objectMapper = objectMapper;
+        this.instructionProfile = instructionProfile;
         this.searchLimit = searchLimit;
     }
 
@@ -82,7 +86,7 @@ public class AskServiceImpl implements AskService {
                 new ProviderRouter.AskRoutingRequest(command.workspaceId(), command.question()));
 
         long generationStarted = System.currentTimeMillis();
-        String answer = ollamaClient.chat(selection.baseUrl(), selection.modelName(), context);
+        String answer = ollamaClient.chat(selection.baseUrl(), selection.modelName(), instructionProfile.askMessages(context));
         long generationMs = System.currentTimeMillis() - generationStarted;
         long totalMs = System.currentTimeMillis() - startedAt;
 

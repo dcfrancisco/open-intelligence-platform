@@ -1,7 +1,9 @@
 package com.oip.infrastructure.ask;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.ArgumentMatchers.argThat;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.inOrder;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
@@ -17,7 +19,10 @@ import com.oip.infrastructure.audit.AuditTrailService;
 import com.oip.infrastructure.conversation.ConversationJpaRepository;
 import com.oip.infrastructure.conversation.PromptJpaRepository;
 import com.oip.infrastructure.conversation.ResponseJpaRepository;
+import com.oip.infrastructure.instruction.OipInstructionProfile;
+import com.oip.infrastructure.instruction.OipPersonalityProperties;
 import com.oip.infrastructure.provider.OllamaClient;
+import com.oip.infrastructure.provider.OllamaModels;
 import java.util.List;
 import java.util.UUID;
 import org.junit.jupiter.api.Test;
@@ -45,6 +50,7 @@ class AskServiceImplTest {
             responseJpaRepository,
             auditTrailService,
             new ObjectMapper(),
+            new OipInstructionProfile(new OipPersonalityProperties()),
             5);
 
     @Test
@@ -80,7 +86,10 @@ class AskServiceImplTest {
                         "Ollama Local",
                         "http://ollama:11434",
                         "llama3.2:1b"));
-        when(ollamaClient.chat("http://ollama:11434", "llama3.2:1b", "Context: Run the migration before starting the app."))
+        when(ollamaClient.chat(
+                eq("http://ollama:11434"),
+                eq("llama3.2:1b"),
+                org.mockito.ArgumentMatchers.<List<OllamaModels.OllamaMessage>>any()))
                 .thenReturn("Start PostgreSQL, apply Flyway, then launch the application.");
         when(conversationJpaRepository.save(any(Conversation.class)))
                 .thenAnswer(invocation -> invocation.getArgument(0));
@@ -99,7 +108,15 @@ class AskServiceImplTest {
         inOrder.verify(vectorSearchService).search(workspaceId, null, "How do I start the platform?", 5);
         inOrder.verify(contextBuilder).build("How do I start the platform?", List.of(entry));
         inOrder.verify(providerRouter).route(any(ProviderRouter.AskRoutingRequest.class));
-        inOrder.verify(ollamaClient).chat("http://ollama:11434", "llama3.2:1b", "Context: Run the migration before starting the app.");
+        inOrder.verify(ollamaClient).chat(
+                eq("http://ollama:11434"),
+                eq("llama3.2:1b"),
+                argThat((List<OllamaModels.OllamaMessage> messages) ->
+                        messages.size() == 2
+                                && "system".equals(messages.get(0).role())
+                                && messages.get(0).content().contains("trusted engineering partner")
+                                && "user".equals(messages.get(1).role())
+                                && "Context: Run the migration before starting the app.".equals(messages.get(1).content())));
 
         assertThat(result.answer()).contains("Flyway");
         assertThat(result.sources()).containsExactly(sourceReference);

@@ -4,6 +4,7 @@ import com.oip.domain.provider.ModelStatus;
 import com.oip.domain.provider.OpenAiCompatibleService;
 import com.oip.domain.provider.ProviderService;
 import com.oip.domain.provider.ProviderStatus;
+import com.oip.infrastructure.instruction.OipInstructionProfile;
 import java.util.List;
 import java.util.UUID;
 import org.springframework.stereotype.Service;
@@ -15,10 +16,15 @@ public class OpenAiCompatibleServiceImpl implements OpenAiCompatibleService {
 
     private final ProviderService providerService;
     private final OllamaClient ollamaClient;
+    private final OipInstructionProfile instructionProfile;
 
-    public OpenAiCompatibleServiceImpl(ProviderService providerService, OllamaClient ollamaClient) {
+    public OpenAiCompatibleServiceImpl(
+            ProviderService providerService,
+            OllamaClient ollamaClient,
+            OipInstructionProfile instructionProfile) {
         this.providerService = providerService;
         this.ollamaClient = ollamaClient;
+        this.instructionProfile = instructionProfile;
     }
 
     @Override
@@ -40,12 +46,10 @@ public class OpenAiCompatibleServiceImpl implements OpenAiCompatibleService {
     @Override
     public ChatCompletionResult chatCompletion(ChatCompletionCommand command) {
         RoutedModel routedModel = resolveModel(command.requestedModel());
-        List<OllamaModels.OllamaMessage> messages = command.messages().stream()
-                .map(message -> new OllamaModels.OllamaMessage(message.role(), message.content()))
-                .toList();
+        List<OllamaModels.OllamaMessage> messages = instructionProfile.assistantMessages(command.messages());
         String content = ollamaClient.chat(routedModel.baseUrl(), routedModel.modelName(), messages);
-        int promptTokens = estimateTokens(command.messages().stream()
-                .map(ChatMessage::content)
+        int promptTokens = estimateTokens(messages.stream()
+                .map(OllamaModels.OllamaMessage::content)
                 .toList());
         int completionTokens = estimateTokens(List.of(content));
         return new ChatCompletionResult(

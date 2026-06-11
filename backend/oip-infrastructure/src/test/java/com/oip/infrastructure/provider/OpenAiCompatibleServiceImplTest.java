@@ -8,6 +8,8 @@ import com.oip.domain.provider.OpenAiCompatibleService;
 import com.oip.domain.provider.ProviderService;
 import com.oip.domain.provider.ProviderStatus;
 import com.oip.domain.provider.ProviderType;
+import com.oip.infrastructure.instruction.OipInstructionProfile;
+import com.oip.infrastructure.instruction.OipPersonalityProperties;
 import java.util.List;
 import java.util.UUID;
 import org.junit.jupiter.api.Test;
@@ -21,7 +23,8 @@ class OpenAiCompatibleServiceImplTest {
                 new StubProviderService(List.of(
                         providerView("Ollama Local", ProviderStatus.ENABLED, "qwen2.5-coder:7b", ModelStatus.ENABLED, 10),
                         providerView("Disabled Provider", ProviderStatus.DISABLED, "llama3.2:3b", ModelStatus.ENABLED, 20))),
-                new StubOllamaClient("unused"));
+                new StubOllamaClient("unused"),
+                new OipInstructionProfile(new OipPersonalityProperties()));
 
         List<OpenAiCompatibleService.AvailableModel> models = service.listModels();
 
@@ -31,11 +34,13 @@ class OpenAiCompatibleServiceImplTest {
 
     @Test
     void routesRequestedModelToOllamaCompatibleBackend() {
+        StubOllamaClient ollamaClient = new StubOllamaClient("Routing prefers enabled configured models.");
         OpenAiCompatibleServiceImpl service = new OpenAiCompatibleServiceImpl(
                 new StubProviderService(List.of(
                         providerView("Ollama Local", ProviderStatus.ENABLED, "llama3.2:3b", ModelStatus.ENABLED, 20),
                         providerView("Ollama Local", ProviderStatus.ENABLED, "qwen2.5-coder:7b", ModelStatus.ENABLED, 10))),
-                new StubOllamaClient("Routing prefers enabled configured models."));
+                ollamaClient,
+                new OipInstructionProfile(new OipPersonalityProperties()));
 
         OpenAiCompatibleService.ChatCompletionResult result = service.chatCompletion(
                 new OpenAiCompatibleService.ChatCompletionCommand(
@@ -47,6 +52,9 @@ class OpenAiCompatibleServiceImplTest {
         assertThat(result.model()).isEqualTo("qwen2.5-coder:7b");
         assertThat(result.content()).contains("Routing");
         assertThat(result.totalTokens()).isGreaterThan(0);
+        assertThat(ollamaClient.lastMessages).hasSize(3);
+        assertThat(ollamaClient.lastMessages.getFirst().role()).isEqualTo("system");
+        assertThat(ollamaClient.lastMessages.getFirst().content()).contains("trusted engineering partner");
     }
 
     @Test
@@ -54,7 +62,8 @@ class OpenAiCompatibleServiceImplTest {
         OpenAiCompatibleServiceImpl service = new OpenAiCompatibleServiceImpl(
                 new StubProviderService(List.of(
                         providerView("Ollama Local", ProviderStatus.ENABLED, "qwen2.5-coder:7b", ModelStatus.ENABLED, 10))),
-                new StubOllamaClient("unused"));
+                new StubOllamaClient("unused"),
+                new OipInstructionProfile(new OipPersonalityProperties()));
 
         assertThatThrownBy(() -> service.chatCompletion(new OpenAiCompatibleService.ChatCompletionCommand(
                         "unknown-model",
@@ -118,6 +127,7 @@ class OpenAiCompatibleServiceImplTest {
     private static final class StubOllamaClient extends OllamaClient {
 
         private final String response;
+        private List<OllamaModels.OllamaMessage> lastMessages = List.of();
 
         private StubOllamaClient(String response) {
             super(RestClient.builder());
@@ -126,6 +136,7 @@ class OpenAiCompatibleServiceImplTest {
 
         @Override
         public String chat(String baseUrl, String model, List<OllamaModels.OllamaMessage> messages) {
+            this.lastMessages = messages;
             return response;
         }
     }
