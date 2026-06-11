@@ -4,7 +4,7 @@ Open Intelligence Platform is a Private AI Development Platform with Memory.
 
 Private First. Cloud Optional. Vendor Neutral.
 
-OIP is not a chatbot product, a Copilot replacement, or an LLM wrapper. It is a private AI development platform providing memory, knowledge, routing, governance, MCP integration, and model abstraction across local and cloud AI providers.
+OIP is not a chatbot product, a Copilot replacement, or an LLM wrapper. It is a private-first intelligence platform for AI assistants and AI coding tools, providing OpenAI-compatible APIs, local and cloud model routing, memory, knowledge management, agents, MCP integration, governance services, and model abstraction across local and cloud AI providers.
 
 ## OIP Personality
 
@@ -55,6 +55,12 @@ OIP is local-first, privacy-respecting, and model-agnostic.
 
 Models may change over time. Memory remains.
 
+Knowledge is durable.
+
+Memory creates continuity.
+
+Experience creates wisdom.
+
 The best outcome is not more AI.
 
 The best outcome is better engineering.
@@ -82,6 +88,10 @@ Ollama
 
 This does not make OIP Continue-specific. It means `Continue` is the first validated client adapter into the OIP runtime.
 
+The primary purpose of OIP is not to expose models.
+
+The primary purpose of OIP is to accumulate and leverage organizational intelligence.
+
 ## Problem Statement
 
 Most AI adoption efforts are fragmented. Teams accumulate assistant clients, vendor-specific APIs, disconnected knowledge stores, and unmanaged model usage patterns that are expensive, hard to govern, and difficult to evolve.
@@ -99,6 +109,14 @@ This creates recurring problems:
 OIP addresses these gaps by separating assistant-facing runtime capabilities from platform administration capabilities.
 
 The Memory Layer is the long-term knowledge system of OIP. Models may change over time. Memory remains. Organizational knowledge, engineering decisions, project history, and lessons learned remain preserved and continuously accessible.
+
+Large language models are static relative to the pace of organizational change. Models provide reasoning. Memory provides continuity. Knowledge provides context. Learning emerges from the combination of all three.
+
+In OIP:
+
+- Models provide intelligence
+- Memory and knowledge provide learning
+- Learning does not require model retraining
 
 ## Why This Matters Now
 
@@ -175,6 +193,89 @@ Needs audit trails, policy-based access control, retention controls, secrets han
 
 Needs reusable development memory such as coding standards, architecture guidance, common fixes, and preferred implementation patterns.
 
+## Intelligence Layers
+
+### Layer 1: Models
+
+Purpose: reasoning
+
+Examples:
+
+- `llama3`
+- `qwen2.5-coder`
+- `DeepSeek`
+- future local or cloud models
+
+Responsibilities:
+
+- Generate responses
+- Analyze information
+- Perform reasoning
+
+Models are replaceable execution engines.
+
+### Layer 2: Memory
+
+Purpose: continuity
+
+Memory stores:
+
+- Conversations
+- User preferences
+- Decisions
+- Project history
+- Working context
+
+Responsibilities:
+
+- Preserve context
+- Maintain continuity
+- Support personalization
+
+Memory survives model replacement.
+
+### Layer 3: Knowledge
+
+Purpose: shared organizational intelligence
+
+Knowledge stores:
+
+- Documentation
+- Architecture
+- Standards
+- Policies
+- Repositories
+- Procedures
+
+Responsibilities:
+
+- Context enrichment
+- Organizational awareness
+- Retrieval support
+
+Knowledge survives model replacement.
+
+### Layer 4: Agents
+
+Purpose: execution
+
+Examples:
+
+- Chat Agent
+- Planning Agent
+- Coding Agent
+- Research Agent
+- Delivery Agent
+
+Responsibilities:
+
+- Orchestrate reasoning
+- Access tools
+- Use memory
+- Use knowledge
+
+Agents consume intelligence from models, memory, and knowledge.
+
 ## Use Cases
 
 - Private AI backend for `Continue` and future coding assistants
@@ -187,6 +288,19 @@ Needs reusable development memory such as coding standards, architecture guidanc
 - Organizational memory for ownership, SMEs, approval workflows, and escalation paths
 - Cost-aware routing between local and cloud models
 - Enterprise AI control plane for provider, model, prompt, and usage governance
+
+## Learning Architecture
+
+OIP does not primarily learn by retraining models.
+
+OIP learns by:
+
+1. Capturing memory
+2. Expanding knowledge
+3. Recording outcomes
+4. Preserving experience
+
+Over time, model intelligence plus memory, knowledge, and experience creates a continuously improving platform even when the underlying model remains unchanged.
 
 ## Long-Term Vision
 
@@ -202,6 +316,7 @@ Long term, OIP should provide:
 - Assistant-facing runtime capabilities
 - Platform administration capabilities
 - Durable memory independent of any single model
+- Durable knowledge independent of any single model
 - Policy-governed routing across local and optional cloud providers
 - Reusable services for future products built on OIP
 

@@ -8,7 +8,9 @@
 - Two-surface platform design: assistant-facing APIs and administration-facing UI evolve separately but share the same runtime and governance core
 - API-first design: every major capability is exposed through versioned APIs and events
 - Separation of concerns: knowledge learning, agent execution, and model training are independent pipelines
+- Intelligence accumulation over time: models provide reasoning, while memory and knowledge preserve continuity, context, and experience across model changes
 - Memory as a platform layer: durable memory is a core capability distinct from model inference and model training
+- Knowledge as a platform layer: shared organizational intelligence is managed independently from memory and model providers
 - MCP as a platform layer: tool access is standardized through MCP rather than embedded directly into agents or product-specific integrations
 - Production readiness: security, auditability, and observability are first-class concerns
 - Extensibility by contract: future products integrate through APIs, events, shared identity, and domain adapters rather than core rewrites
@@ -16,6 +18,17 @@
 - Governance by design: identity, policy, audit, registry, evaluation, and cost controls are platform services, not add-ons
 
 Private First. Cloud Optional. Vendor Neutral.
+
+## Intelligence Architecture
+
+OIP is designed around four intelligence layers:
+
+1. Models for reasoning
+2. Memory for continuity
+3. Knowledge for organizational context
+4. Agents for execution
+
+Large language models are static relative to the platform's accumulated experience. OIP improves over time by preserving memory, expanding knowledge, and recording outcomes independently of any single model provider.
 
 ## High-Level Architecture
 
@@ -41,6 +54,7 @@ flowchart TD
     APIGW --> MemoryRetrieval[Memory Retrieval Service]
     APIGW --> MemoryGov[Memory Governance Service]
     APIGW --> MemoryAnalytics[Memory Analytics Service]
+    APIGW --> Experience[Experience Service]
     APIGW --> Audit[Audit Service]
     APIGW --> Secrets[Secrets Service]
     APIGW --> Agent[Agent Orchestrator]
@@ -79,6 +93,10 @@ flowchart TD
     MemoryIndex --> VectorDB[(Vector Database)]
     MemoryRetrieval --> MemoryIndex
     MemoryRetrieval --> Knowledge
+    Experience --> Memory
+    Experience --> Knowledge
+    Experience --> Evaluation
+    Experience --> RDB
     MemoryAnalytics --> Memory
     MemoryAnalytics --> RDB
     MemoryGov --> Audit
@@ -132,6 +150,7 @@ flowchart TD
     MemoryRetrieval --> Obs
     MemoryGov --> Obs
     MemoryAnalytics --> Obs
+    Experience --> Obs
     Audit --> Obs
     MCPGateway --> Obs
     MCPRegistry --> Obs
@@ -174,6 +193,26 @@ flowchart TD
 ```
 
 This proves OIP can act as the intelligence backend for AI coding assistants while keeping provider control inside OIP.
+
+## Intelligence Layers in the Runtime
+
+```mermaid
+flowchart TD
+    Models[Models]
+    Memory[Memory]
+    Knowledge[Knowledge]
+    Experience[Experience]
+    Agents[Agents]
+
+    Memory --> Agents
+    Knowledge --> Agents
+    Models --> Agents
+    Experience --> Memory
+    Experience --> Knowledge
+    Agents --> Experience
+```
+
+Models provide reasoning. Memory provides continuity. Knowledge provides context. Experience captures outcomes that can improve future behavior without retraining the underlying model.
 
 ## Component Responsibilities
 
@@ -243,6 +282,10 @@ Applies workspace isolation, data classification, retention rules, ownership con
 ### Memory Analytics Service
 
 Measures memory freshness, quality, duplication, coverage, and gap signals. It helps teams identify stale knowledge, missing ownership, repeated incidents, and under-documented delivery patterns.
+
+### Experience Service
+
+Captures outcomes, feedback, operational lessons, and reusable patterns that emerge from real assistant and agent usage. This service turns interactions into durable platform learning without coupling that learning to model retraining.
 
 ### Agent Orchestrator
 
@@ -329,6 +372,8 @@ Provide optional access to premium capabilities when reasoning quality, multimod
 
 Manage dataset building, data validation, fine-tune orchestration, model packaging, evaluation, and model registry updates. This capability is isolated because training is resource-intensive, asynchronous, and operationally distinct from real-time inference.
 
+Training is not the primary learning path for OIP. The primary learning path is memory, knowledge, and experience accumulation. Training remains optional and separate.
+
 ### Deployment and Operations Service
 
 Coordinates deployment metadata, environment promotion, rollout strategies, health standards, operational runbook references, backup policies, and disaster recovery posture. This makes production operations part of the platform architecture rather than a hidden external concern.
@@ -349,6 +394,8 @@ Collects logs, metrics, traces, health signals, AI usage telemetry, and audit-co
 
 - It supports both simple and advanced deployments without changing the core design.
 - It preserves organizational memory as a stable system even when models, prompts, or providers evolve.
+- It preserves organizational knowledge as a durable context layer even when models, prompts, or providers evolve.
+- It lets platform intelligence improve over time through memory, knowledge, and experience even if the underlying model remains unchanged.
 - It allows fully private operation without any external AI provider dependency.
 - It standardizes tool access through MCP so future products can reuse one governed integration backbone.
 - It avoids embedding provider-specific logic into UI or business workflows.

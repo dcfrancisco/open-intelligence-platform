@@ -13,6 +13,8 @@ The MVP is intentionally small. It is not a reduced copy of the full target arch
 
 The MVP is intentionally small, but every MVP component is designed as the first version of a production-grade enterprise capability.
 
+The MVP proves the assistant-facing runtime first, but the long-term value of OIP is not the API edge alone. The long-term value is the accumulated intelligence layer built from memory, knowledge, and experience.
+
 ## MVP Scope
 
 ### Included
@@ -54,6 +56,7 @@ This MVP focuses on the minimum path that proves OIP is viable:
 - OIP can sit between assistant clients and raw providers
 - OIP can hide raw provider model names behind stable aliases
 - OIP can establish mode-based behavior before complex agent orchestration
+- OIP can create a clean runtime foundation that memory and knowledge can enrich later
 - The backend can support clean modular growth
 - Administration UI can be added later without redesigning the runtime
 - Enterprise direction is preserved without forcing enterprise complexity into the first milestone
@@ -94,6 +97,19 @@ Recommended internal modules:
 - `shared`: configuration, error handling, and observability hooks
 
 These modules should be coded as the first version of broader enterprise capabilities. For example, `routing` should anticipate policy and fallback logic, `registry` should anticipate admin-managed aliases, and `persistence` should leave room for audit, registry, and workspace metadata.
+
+## Intelligence Direction Beyond the MVP
+
+The MVP does not yet make memory and knowledge hard dependencies for success, but it should not be mistaken for the full platform value.
+
+OIP is designed around:
+
+- Models for reasoning
+- Memory for continuity
+- Knowledge for context
+- Experience for learning over time
+
+Models are replaceable. Memory and knowledge remain. The MVP should preserve extension points so those layers can be added without redesigning the runtime.
 
 ## Model Abstraction
 
@@ -206,3 +222,5 @@ The next major architectural step after runtime modes is the administration UI, 
 - tools
 - monitoring
 - settings
+
+As OIP grows beyond the MVP, memory and knowledge become the main sources of durable platform intelligence. The assistant API remains important, but it is the entry point, not the moat.

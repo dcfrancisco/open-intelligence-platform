@@ -12,6 +12,8 @@ Continue -> OIP -> Ollama
 
 The near-term goal is to complete the first assistant-facing runtime before expanding memory, knowledge, and the broader control plane.
 
+The long-term goal is larger than model access. OIP should accumulate intelligence over time through memory, knowledge, and experience while remaining independent of any single model or provider.
+
 ## Milestone 0: Repository Foundation
 
 ### Objective
@@ -179,11 +181,11 @@ Introduce OIP runtime modes without implementing full multi-agent orchestration.
 - `docs/mvp.md`
 - `docs/model-routing.md`
 
-## Milestone 5: Admin Dashboard
+## Milestone 5: Platform Dashboard
 
 ### Objective
 
-Introduce the administration surface of the platform.
+Introduce the administration surface for managing platform intelligence.
 
 ### Deliverables
 
@@ -191,6 +193,8 @@ Introduce the administration surface of the platform.
 - Providers management
 - Memory management
 - Knowledge management
+- Agent configuration entry points
+- Tool and MCP management entry points
 - Tools management
 - Monitoring entry points
 - Settings management
@@ -199,6 +203,7 @@ Introduce the administration surface of the platform.
 
 - OIP exposes a distinct administration surface
 - Administrators can manage model aliases and provider settings
+- Administrators can inspect and manage memory and knowledge as first-class platform assets
 - Platform configuration is no longer hidden in code or environment variables alone
 - The dashboard is positioned as a platform management feature, not an assistant feature
 
@@ -219,13 +224,16 @@ Introduce the administration surface of the platform.
 
 ### Objective
 
-Implement the first working version of project memory as a platform capability.
+Implement the first working version of memory as a platform capability.
 
 ### Deliverables
 
+- Personal memory
+- Project memory
+- Organizational memory
 - Memory collections
 - Memory entries
-- Conversations
+- Conversations and decisions
 - Retention hooks
 - Memory search and management
 
@@ -262,6 +270,7 @@ Add managed knowledge ingestion and retrieval on top of the validated assistant 
 - Architecture docs
 - Standards
 - Policies
+- RAG retrieval
 - Knowledge indexing
 
 ### Acceptance Criteria
@@ -318,6 +327,47 @@ Integrate Delivery Wizard as a product or tool layer on top of OIP foundations.
 ## Milestone 9: Advanced Agent Framework
 
 ### Objective
+
+Introduce broader agent execution on top of OIP memory, knowledge, routing, and governance services.
+
+### Deliverables
+
+- Research Agent
+- Delivery Agent
+- Multi-agent workflows
+- Agent-to-memory integration
+- Agent-to-knowledge integration
+
+### Acceptance Criteria
+
+- Agents can consume OIP-managed memory and knowledge instead of isolated prompts
+- Agent workflows remain governed by OIP routing, tool, and policy controls
+- Advanced agents do not bypass the platform intelligence layers
+
+### Suggested Tests
+
+- Agent workflow orchestration tests
+- Agent memory and knowledge retrieval tests
+- Tool access and approval tests
+
+### Documentation Updates
+
+- `docs/agent-framework.md`
+- `docs/architecture.md`
+- `docs/vision.md`
+
+## Learning Direction
+
+OIP does not primarily learn by retraining models.
+
+The intended learning loop across milestones is:
+
+1. Capture memory
+2. Expand knowledge
+3. Record outcomes and experience
+4. Improve future responses and workflows
+
+This means the build sequence should always preserve a clean separation between model reasoning, memory continuity, knowledge context, and optional training pipelines.
 
 Move from prompt- and routing-based modes into a fuller agent framework.
 
