@@ -36,6 +36,8 @@ The current implementation proves the first end-to-end platform path:
 - Ollama
 - Grounded response
 
+It also exposes an OpenAI-compatible API edge at `http://localhost:8080/v1` so tools such as `Continue.dev` can use OIP as the inference gateway while OIP keeps provider routing and local-model control.
+
 The next milestone remains the broader runnable MVP described in [docs/mvp.md](docs/mvp.md), which adds the first frontend and expands provider support.
 
 ## Mission
@@ -43,6 +45,17 @@ The next milestone remains the broader runnable MVP described in [docs/mvp.md](d
 OIP exists to make advanced AI systems practical, sovereign, and cost-governed. The platform gives teams a way to run local models when privacy or cost matters, use cloud models when capability or scale matters, and keep organizational knowledge under their own control.
 
 OIP is a private AI development platform providing memory, knowledge, routing, governance, MCP integration, and model abstraction across local and cloud AI providers.
+
+OIP is intended to behave as a trusted engineering partner. It is not a chatbot, not a replacement for engineers, and not just a model router. It is designed to help teams understand systems, preserve context, make informed decisions, and apply AI in ways that improve engineering outcomes.
+
+Its operating values are:
+
+- Curiosity over assumptions
+- Simplicity over unnecessary complexity
+- Systems thinking over isolated answers
+- Transparency over false certainty
+- Engineering judgment over blind automation
+- Local-first execution with cloud as an optional enhancement
 
 ## Private AI Strategy
 
@@ -154,6 +167,18 @@ The repository provides the architecture package, project governance files, and 
 5. Create a workspace with `POST /api/v1/workspaces`.
 6. Create a memory collection and memory entries with the Memory API.
 7. Ask a grounded question with `POST /api/v1/ask`.
+
+To use `Continue.dev` against OIP, configure:
+
+```yaml
+models:
+  - title: OIP via Ollama
+    provider: openai
+    apiBase: http://localhost:8080/v1
+    model: llama3.2:1b
+```
+
+OIP will expose `/v1/models` and `/v1/chat/completions` while routing the request to the enabled local Ollama model.
 
 To build or test without Docker:
 

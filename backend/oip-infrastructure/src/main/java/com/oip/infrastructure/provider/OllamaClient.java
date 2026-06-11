@@ -2,7 +2,7 @@ package com.oip.infrastructure.provider;
 
 import com.oip.infrastructure.provider.OllamaModels.OllamaChatRequest;
 import com.oip.infrastructure.provider.OllamaModels.OllamaChatResponse;
-import java.util.Map;
+import java.util.List;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestClient;
@@ -32,12 +32,16 @@ public class OllamaClient {
     }
 
     public String chat(String baseUrl, String model, String prompt) {
+        return chat(baseUrl, model, java.util.List.of(new OllamaModels.OllamaMessage("user", prompt)));
+    }
+
+    public String chat(String baseUrl, String model, List<OllamaModels.OllamaMessage> messages) {
         OllamaChatResponse response = restClientBuilder.baseUrl(baseUrl)
                 .build()
                 .post()
                 .uri("/api/chat")
                 .contentType(MediaType.APPLICATION_JSON)
-                .body(new OllamaChatRequest(model, java.util.List.of(new OllamaModels.OllamaMessage("user", prompt)), false))
+                .body(new OllamaChatRequest(model, messages, false))
                 .retrieve()
                 .body(OllamaChatResponse.class);
         if (response == null || response.message() == null || response.message().content() == null) {

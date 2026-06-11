@@ -2,14 +2,12 @@
 
 ## Objective
 
-The first runnable MVP of Open Intelligence Platform proves one complete, useful flow:
+The first runnable MVP of Open Intelligence Platform proves one complete, useful assistant-runtime flow:
 
-1. Ingest private documents
-2. Chunk and embed them into `PostgreSQL` with `pgvector`
-3. Ask a question through a simple chat UI
-4. Retrieve relevant context
-5. Route the request to a local or cloud model
-6. Return a grounded answer
+1. `Continue` calls OIP using an OpenAI-compatible API
+2. OIP resolves an internal assistant mode or model alias
+3. OIP routes the request to a local model through `Ollama`
+4. OIP returns an OpenAI-compatible response to the client
 
 The MVP is intentionally small. It is not a reduced copy of the full target architecture. It is a deliberate implementation slice that validates the most important technical seams.
 
@@ -20,24 +18,23 @@ The MVP is intentionally small, but every MVP component is designed as the first
 ### Included
 
 - `Spring Boot` backend as a modular monolith
-- `Next.js` frontend
+- OpenAI-compatible assistant API
 - `PostgreSQL` with `pgvector`
 - Local inference provider for `Ollama`
-- One OpenAI-compatible provider
 - Basic model router
-- Document ingestion
-- Chunking
-- Embedding generation
-- Vector retrieval
-- Initial project memory collections
-- Source attribution for project memory artifacts
-- Ask-question API
-- Simple chat UI
+- Assistant-facing model discovery
+- Assistant-facing chat completions
+- OIP model aliases
+- Initial OIP runtime modes: `CHAT`, `PLAN`, `AGENT`
+- Swagger UI and published OpenAPI contract
 - Foundational observability hooks for request tracing, token usage, and cost reporting
 - Internal boundaries that can grow into identity, policy, audit, registry, and governance services
 
 ### Out of Scope
 
+- Full administration dashboard implementation
+- Memory ingestion and retrieval as MVP blockers
+- Knowledge ingestion and retrieval as MVP blockers
 - Large microservice decomposition
 - Multi-agent orchestration
 - Fine-tuning pipelines
@@ -45,39 +42,41 @@ The MVP is intentionally small, but every MVP component is designed as the first
 - Enterprise SSO, SCIM, or advanced RBAC
 - Multi-tenant billing and quotas
 - Complex workflow automation
-- Organizational intelligence features such as SME mapping, escalations, and incident graphing
 - Full HA, DR, and multi-environment production automation
 
 ## Why This MVP
 
 This MVP focuses on the minimum path that proves OIP is viable:
 
-- Provider abstraction works
+- Assistant compatibility works
 - Local-first AI works
-- Retrieval improves answer quality
+- Provider abstraction works
+- OIP can sit between assistant clients and raw providers
+- OIP can hide raw provider model names behind stable aliases
+- OIP can establish mode-based behavior before complex agent orchestration
 - The backend can support clean modular growth
-- The frontend can offer a usable experience without waiting for the entire platform
-- Enterprise direction is preserved without forcing enterprise complexity into day one setup
+- Administration UI can be added later without redesigning the runtime
+- Enterprise direction is preserved without forcing enterprise complexity into the first milestone
 
 ## MVP Architecture
 
 ```mermaid
 flowchart TD
-    User[User] --> UI[Next.js Chat UI]
-    UI --> API[Spring Boot API]
-    API --> Workspace[Workspace Boundaries]
-    API --> Policy[Policy Hooks]
-    API --> Audit[Audit Hooks]
-    API --> Memory[Project Memory Module]
-    API --> Ingest[Document Ingestion Module]
-    API --> Retrieve[Retrieval Module]
-    API --> Router[Model Router]
-    API --> Cost[Usage and Cost Hooks]
-    Memory --> DB[(PostgreSQL + pgvector)]
-    Ingest --> DB[(PostgreSQL + pgvector)]
-    Retrieve --> DB
-    Router --> Ollama[Ollama Adapter]
-    Router --> OpenAICompat[OpenAI-Compatible Adapter]
+    Continue[Continue.dev]
+    AssistantAPI[OpenAI-Compatible API]
+    Runtime[OIP Runtime]
+    Modes[Modes]
+    Router[Model Router]
+    Ollama[Ollama]
+    DB[(PostgreSQL + pgvector)]
+
+    Continue --> AssistantAPI
+    AssistantAPI --> Runtime
+    Runtime --> Modes
+    Runtime --> Router
+    Runtime --> DB
+    Modes --> Router
+    Router --> Ollama
 ```
 
 ## Backend Design
@@ -87,102 +86,86 @@ The backend should be a modular monolith rather than a microservice set. This gi
 Recommended internal modules:
 
 - `api`: REST controllers and request models
-- `knowledge`: document ingestion, chunking, embedding, and retrieval
+- `modes`: runtime mode resolution and prompt mapping
 - `routing`: model selection and normalized inference contracts
-- `providers`: `Ollama` and OpenAI-compatible provider integrations
+- `providers`: `Ollama` integration and internal provider abstraction
+- `registry`: model aliases and provider metadata
 - `persistence`: repositories, migrations, and vector queries
 - `shared`: configuration, error handling, and observability hooks
 
-These modules should be coded as the first version of broader enterprise capabilities. For example, `routing` should anticipate policy and fallback logic, and `persistence` should leave room for audit, registry, and workspace metadata.
+These modules should be coded as the first version of broader enterprise capabilities. For example, `routing` should anticipate policy and fallback logic, `registry` should anticipate admin-managed aliases, and `persistence` should leave room for audit, registry, and workspace metadata.
 
-## Frontend Design
+## Model Abstraction
 
-The frontend should begin with a minimal but real product surface:
+Assistant clients should not see raw provider model names. They should see OIP-managed aliases.
 
-- Chat page
-- Document upload page or upload panel
-- Model preference selector
-- Response area with citations or source hints
+Initial aliases:
 
-The frontend should not attempt to model all future workspace, admin, or agent experiences yet.
+- `oip-chat`
+- `oip-plan`
+- `oip-agent`
+- `oip-embed`
+
+Example internal routing:
+
+- `oip-chat -> llama3`
+- `oip-plan -> llama3`
+- `oip-agent -> qwen2.5-coder`
+- `oip-embed -> nomic-embed-text`
 
 ## Primary API Flows
 
-### Document Ingestion
+### Assistant Chat Flow
 
 ```mermaid
 sequenceDiagram
-    participant U as User
-    participant UI as Next.js UI
-    participant API as Spring Boot API
-    participant K as Knowledge Module
-    participant DB as PostgreSQL + pgvector
-
-    U->>UI: Upload document
-    UI->>API: POST /api/v1/documents
-    API->>K: Normalize, chunk, embed
-    K->>DB: Store document, chunks, embeddings
-    DB-->>API: Persisted metadata
-    API-->>UI: Upload result
-```
-
-### Ask Question
-
-```mermaid
-sequenceDiagram
-    participant U as User
-    participant UI as Next.js UI
-    participant API as Spring Boot API
-    participant M as Memory Module
-    participant K as Retrieval Module
+    participant C as Continue
+    participant API as OIP Assistant API
+    participant Mode as OIP Mode Resolver
     participant R as Model Router
-    participant P as Selected Model
+    participant O as Ollama
 
-    U->>UI: Ask question
-    UI->>API: POST /api/v1/ask
-    API->>M: Resolve project memory context
-    M-->>API: Relevant memory entries
-    API->>K: Retrieve context
-    K-->>API: Top matching chunks
-    API->>R: Route prompt + memory + context
-    R->>P: Invoke selected provider
-    P-->>API: Answer
-    API-->>UI: Answer + source references
+    C->>API: POST /v1/chat/completions
+    API->>Mode: Resolve alias or mode
+    Mode->>R: Select internal target
+    R->>O: Invoke selected local model
+    O-->>API: Completion
+    API-->>C: OpenAI-compatible response
 ```
 
-## Initial Data Model
+### Assistant Model Discovery
 
-The MVP data model should stay small:
+```mermaid
+sequenceDiagram
+    participant C as Continue
+    participant API as OIP Assistant API
+    participant Registry as Model Registry
 
-- `documents`
-- `chunks`
-- `embeddings`
-- `memory_collections`
-- `memory_entries`
-- `memory_sources`
-- `conversations`
-- `messages`
-- `provider_configs`
-- `workspace_configs`
-- `usage_events`
+    C->>API: GET /v1/models
+    API->>Registry: List exposed aliases
+    Registry-->>API: oip-chat, oip-plan, oip-agent, oip-embed
+    API-->>C: OpenAI-compatible model list
+```
 
-This is enough to support ingestion, retrieval, and chat without prematurely encoding the entire long-term domain model into the first implementation.
+## OpenAPI Contract
 
-## Suggested Repository Growth
-
-The implementation should start with a simple structure aligned to the modular monolith:
+OIP must publish an OpenAPI specification at:
 
 ```text
-frontend/
-  apps/
-    web/
-backend/
-  oip-server/
-docs/
-  adr/
+openapi/oip-api.yaml
 ```
 
-If the MVP succeeds, later milestones can extract modules or split services based on real pressure rather than anticipation.
+Initial contract scope:
+
+- `GET /v1/models`
+- `POST /v1/chat/completions`
+- `POST /v1/embeddings`
+
+Future:
+
+- `POST /v1/responses`
+
+Swagger UI must remain enabled.
 
 ## Definition of Done
 
@@ -190,22 +173,36 @@ The MVP is successful when a contributor can:
 
 1. Start PostgreSQL with `pgvector`
 2. Start the Spring Boot backend
-3. Start the Next.js frontend
-4. Upload one or more documents
-5. Ask a question grounded in those documents
-6. Receive an answer produced through the model router using either `Ollama` or the OpenAI-compatible provider
+3. Configure `Continue` with:
+   `provider: openai`
+   `apiBase: http://localhost:8080/v1`
+4. Call `GET /v1/models`
+5. Call `POST /v1/chat/completions`
+6. Receive an OpenAI-compatible response routed through OIP to `Ollama`
+7. Use OIP aliases rather than raw provider model names
 
 ## Enterprise Direction
 
-The MVP should remain easy to build and run, but its implementation should not dead-end the platform. The MVP should prepare for later addition of:
+The MVP should remain easy to build and run, but its implementation should not dead-end the platform. It should prepare for:
 
+- an administration UI
+- provider, model, and prompt registries
+- memory and knowledge expansion
+- cost governance and quotas
+- audit logging and response review
 - SSO and enterprise identity
-- RBAC, ABAC, and policy enforcement
-- Provider, model, and prompt registries
-- Cost governance and quotas
-- Audit logging and response review
 - HA deployment and Kubernetes operations
 
 ## Relationship to the Full Architecture
 
-The MVP does not replace the architecture package. It operationalizes the first slice of it. Future phases can add agents, continuous learning, organizational intelligence, and fine-tuning on top of this foundation without discarding the MVP's core abstractions.
+This MVP does not replace the broader OIP architecture. It validates the first assistant-facing surface of it.
+
+The next major architectural step after runtime modes is the administration UI, which will manage:
+
+- models
+- providers
+- memory
+- knowledge
+- tools
+- monitoring
+- settings

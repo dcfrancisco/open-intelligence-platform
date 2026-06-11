@@ -1,118 +1,211 @@
 # Vision
 
-Open Intelligence Platform is a Private AI Development Platform with Memory. The platform is designed to preserve knowledge as a long-lived organizational asset, not merely to provide access to model inference.
+Open Intelligence Platform is a Private AI Development Platform with Memory.
 
 Private First. Cloud Optional. Vendor Neutral.
 
+OIP is not a chatbot product, a Copilot replacement, or an LLM wrapper. It is a private AI development platform providing memory, knowledge, routing, governance, MCP integration, and model abstraction across local and cloud AI providers.
+
+## OIP Personality
+
+Open Intelligence Platform is a trusted engineering partner.
+
+It is not an assistant, not a chatbot, and not a replacement for engineers. It is a force multiplier for engineers who need context, memory, grounded reasoning, and practical system support.
+
+OIP exists to help engineers understand systems, solve problems, and make informed decisions. Its goal is not to generate the most code. Its goal is to help teams build the right systems and preserve the knowledge behind them.
+
+### Operating Traits
+
+#### Curious
+
+OIP should seek context before offering solutions. It should ask useful questions, avoid shallow assumptions, and prefer understanding the problem over reacting to incomplete input.
+
+#### Pragmatic
+
+OIP should favor working solutions over novelty, and simplicity over unnecessary complexity. It should recommend `Docker Compose` when that is sufficient, and escalate to more complex infrastructure only when the problem actually requires it.
+
+#### Engineering First
+
+OIP should treat architecture, operations, maintainability, observability, and production readiness as part of the solution, not as optional follow-up concerns.
+
+#### Honest
+
+OIP should distinguish fact from opinion, admit uncertainty, and surface tradeoffs clearly. When more context is needed, it should say so directly.
+
+#### Local First
+
+OIP should prefer private execution, respect privacy boundaries, and treat cloud usage as optional policy-governed augmentation rather than a default dependency.
+
+## OIP Manifesto
+
+OIP values:
+
+- Curiosity over assumptions
+- Understanding over memorization
+- Simplicity over complexity
+- Systems thinking over silos
+- Transparency over certainty
+- Engineering judgment over blind automation
+
+OIP does not replace engineers.
+
+OIP amplifies engineers.
+
+OIP is local-first, privacy-respecting, and model-agnostic.
+
+Models may change over time. Memory remains.
+
+The best outcome is not more AI.
+
+The best outcome is better engineering.
+
+## Core Positioning
+
+OIP now has two platform surfaces:
+
+1. Assistant API
+   Used by `Continue` first, and later by other AI coding assistants and AI-enabled products.
+2. Administration UI
+   Used by administrators to manage models, memory, knowledge, tools, providers, and platform settings.
+
+The first validated runtime path is:
+
+```text
+Continue.dev
+    ->
+OIP Assistant API
+    ->
+OIP Runtime
+    ->
+Ollama
+```
+
+This does not make OIP Continue-specific. It means `Continue` is the first validated client adapter into the OIP runtime.
+
 ## Problem Statement
 
-Most AI adoption efforts are fragmented. Teams typically accumulate isolated chat tools, vendor-specific copilots, disconnected knowledge repositories, and model access patterns that are difficult to govern or optimize. This creates five recurring problems:
+Most AI adoption efforts are fragmented. Teams accumulate assistant clients, vendor-specific APIs, disconnected knowledge stores, and unmanaged model usage patterns that are expensive, hard to govern, and difficult to evolve.
 
-- Knowledge remains trapped in documents, meetings, tickets, and operational systems
-- AI usage is expensive because every task is sent to premium cloud models
+This creates recurring problems:
+
+- Knowledge remains trapped in documents, repositories, meetings, tickets, and operational systems
+- Assistant tools depend directly on external providers and expose teams to vendor lock-in
 - Sensitive work cannot safely leave the organization
-- Organizations become locked into one provider's APIs, pricing, and roadmap
+- Model selection is unmanaged, inconsistent, and costly
 - Learning from interactions rarely becomes reusable organizational intelligence
-- Project and engineering history decays because decisions, lessons, KT sessions, and incidents are not captured as reusable memory
+- Project and engineering history decays because decisions, KT sessions, incidents, and delivery lessons are not preserved as memory
+- Teams adopt assistants, but lack a control plane for models, knowledge, memory, and tools
 
-OIP addresses these gaps by combining private knowledge management, model choice, agentic automation, and continuous learning in one platform.
+OIP addresses these gaps by separating assistant-facing runtime capabilities from platform administration capabilities.
 
 The Memory Layer is the long-term knowledge system of OIP. Models may change over time. Memory remains. Organizational knowledge, engineering decisions, project history, and lessons learned remain preserved and continuously accessible.
 
-The platform must solve this problem across three deployment tiers:
+## Why This Matters Now
+
+The validated MVP direction is no longer:
+
+```text
+User -> OIP UI -> Model
+```
+
+The validated MVP direction is:
+
+```text
+Continue -> OIP -> Ollama
+```
+
+That changes early platform sequencing:
+
+- OpenAI-compatible assistant integration is the first proven edge
+- OIP runtime modes become the next important abstraction
+- Administration UI becomes the management surface for the platform
+- Memory and knowledge remain core architecture, but they are not the first validation target
+
+## Deployment Tiers
+
+OIP must solve this problem across three deployment tiers:
 
 - Developer or solo deployment for local-first productivity
 - Team or small business deployment for shared knowledge and controlled operations
 - Enterprise or production deployment for security, governance, scale, and resilience
 
-This makes OIP more than a model-access tool. It becomes a Private AI Development Platform with Memory.
-
 ## Market Opportunity
 
-The market opportunity sits at the intersection of enterprise AI platforms, developer tools, knowledge management, and operational automation.
+The opportunity sits at the intersection of:
 
-- Individual developers need private coding and research environments
-- Consultants need reusable AI workspaces they can adapt per client
-- Students need affordable local AI environments for learning and experimentation
-- Small businesses need practical AI without a dedicated ML platform team
-- Delivery organizations need knowledge reuse across projects, KT, runbooks, and architecture artifacts
-- Enterprise teams need governance, observability, and extensibility without vendor lock-in
-- Enterprise teams need a durable memory system that survives model changes, team changes, and product evolution
+- developer assistants
+- enterprise AI platforms
+- knowledge platforms
+- operational governance
+- organizational memory systems
 
-The strongest opportunity for OIP is not competing as a generic chatbot, Copilot replacement, or LLM wrapper. It is becoming a private AI development platform providing memory, knowledge, routing, governance, MCP integration, and model abstraction across local and cloud AI providers.
+The strongest opportunity for OIP is not competing with assistant clients directly. It is becoming the private intelligence runtime and control plane behind them.
 
 ## User Personas
 
 ### Individual Developer
 
-Needs a local-first AI workspace for coding, learning, and private experimentation. Values low cost, fast setup, and control over tools.
+Needs a local-first AI runtime that works with familiar assistant clients while keeping model choice and private context under personal control.
 
 ### Consultant
 
-Needs a portable platform that can separate client workspaces, manage context safely, and reuse delivery patterns across engagements.
+Needs portable client-specific workspaces, reusable delivery memory, and controlled assistant behavior across engagements.
 
 ### Student
 
-Needs a low-cost AI environment for study notes, coding help, and knowledge exploration on commodity hardware.
+Needs a low-cost local AI environment for coding, notes, and experimentation on commodity hardware.
 
 ### Small Business Operator
 
-Needs an affordable system for internal knowledge, procedures, customer support playbooks, and productivity workflows.
+Needs practical private AI without a dedicated ML platform team, plus a manageable surface for documents, settings, and provider control.
 
 ### Delivery Lead
 
-Needs project knowledge continuity across teams, KT sessions, incidents, handovers, and architecture decisions.
+Needs project knowledge continuity across KT sessions, incidents, handovers, architecture decisions, and assistant-driven delivery workflows.
 
 ### Enterprise Platform Team
 
-Needs policy enforcement, secure model usage, observability, RBAC and ABAC, deployment promotion, cost governance, and integration points for broader organizational systems.
+Needs a governed assistant backend plus an administration surface for models, providers, memory, knowledge, tools, usage, and policies.
 
 ### Enterprise Security and Compliance Stakeholder
 
-Needs audit trails, policy-based access control, data classification, retention controls, secrets handling, DLP-aware workflows, and evidence that the platform can be operated safely in production.
+Needs audit trails, policy-based access control, retention controls, secrets handling, DLP-aware workflows, and evidence that the platform can be operated safely in production.
 
 ### Engineering Enablement Lead
 
-Needs reusable development memory such as architecture patterns, coding standards, common fixes, integration conventions, and lessons learned that can be applied across products and teams.
+Needs reusable development memory such as coding standards, architecture guidance, common fixes, and preferred implementation patterns.
 
 ## Use Cases
 
-- Private AI coding assistant for repositories, architecture, and documentation
-- Memory and governance backbone for developer assistants such as Copilot, Cursor, Codex, Claude Code, JetBrains AI Assistant, and Continue.dev
+- Private AI backend for `Continue` and future coding assistants
+- Model abstraction layer that hides raw provider model names from assistant clients
+- Runtime modes for chat, planning, and coding assistance
+- Administration surface for model aliases, provider routing, tool enablement, and platform configuration
 - Project memory for products such as Delivery Wizard, PortalOps AI, EventEase AI, and WorkTime AI
 - Internal knowledge assistant over runbooks, KT notes, incidents, ADRs, and policies
 - Development memory for coding standards, architecture guidance, and reusable engineering patterns
 - Organizational memory for ownership, SMEs, approval workflows, and escalation paths
-- Agent-driven software delivery workflows
 - Cost-aware routing between local and cloud models
 - Enterprise AI control plane for provider, model, prompt, and usage governance
-- Regulated or privacy-sensitive knowledge retrieval with workspace boundaries and auditability
-- Team memory built from human interactions and approved AI outputs
-- Fine-tuning on domain-specific datasets where baseline models are insufficient
-- Cross-product intelligence services shared by Delivery Wizard, PortalOps AI, EventEase AI, and WorkTime AI
 
 ## Long-Term Vision
 
-OIP becomes an organizational intelligence platform rather than only a prompt interface. Over time it should:
+OIP should evolve into:
 
-- Serve as the system of intelligence over enterprise knowledge assets
-- Preserve durable memory independently of model weights and provider choices
-- Coordinate multiple specialized agents safely and transparently
-- Learn continuously from approved human and machine interactions
-- Support policy-based routing to local or cloud models
-- Enforce security, governance, and cost controls consistently across deployment tiers
-- Provide production-grade operations, promotion, backup, recovery, and observability patterns
-- Act as a common AI substrate for multiple internal or commercial applications
-- Act as a reusable memory substrate for all future products built on OIP
+- a private AI development platform
+- an enterprise memory platform
+- an organizational intelligence platform
+- an AI governance platform
 
-OIP should grow across four long-term roles:
+Long term, OIP should provide:
 
-- Private AI Development Platform
-- Enterprise Memory Platform
-- Organizational Intelligence Platform
-- AI Governance Platform
+- Assistant-facing runtime capabilities
+- Platform administration capabilities
+- Durable memory independent of any single model
+- Policy-governed routing across local and optional cloud providers
+- Reusable services for future products built on OIP
 
-The long-term differentiation is composability. OIP should be able to power a solo developer laptop today and a multi-team enterprise intelligence environment tomorrow using the same architectural principles, identity model, policy model, observability model, and memory model.
+The long-term behavioral goal is for OIP to act as a dependable engineering partner across those capabilities: preserving context, reasoning through systems, and helping teams make durable technical decisions instead of merely producing responses.
 
 ## Private AI Strategy
 
@@ -139,14 +232,10 @@ Rationale:
 - Private infrastructure
 - No external AI providers
 
-Best for regulated workloads, sovereign environments, and strict data boundary requirements.
-
 ### Hybrid
 
 - Local models
 - Selective cloud usage
-
-Best for teams that want private defaults with policy-governed access to cloud reasoning when needed.
 
 ### Enterprise Cloud
 
@@ -154,11 +243,10 @@ Best for teams that want private defaults with policy-governed access to cloud r
 - Enterprise policies
 - Audit controls
 
-Best for organizations that need enterprise cloud integrations but still require routing policy, audit, and provider neutrality.
-
 ## Non-Goals
 
 - Becoming a proprietary model vendor
+- Replacing assistant clients such as `Continue`
 - Replacing source systems such as ticketing, document management, or HR systems
 - Hiding operational complexity at the expense of transparency
 - Training frontier models from scratch

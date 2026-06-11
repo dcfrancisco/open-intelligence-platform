@@ -5,6 +5,7 @@
 - Provider neutrality: model providers, vector stores, and runtimes are abstracted behind stable interfaces
 - Local-first optionality: the platform can prioritize local execution without excluding cloud augmentation
 - Private first: the platform must be operable using private infrastructure and local models only
+- Two-surface platform design: assistant-facing APIs and administration-facing UI evolve separately but share the same runtime and governance core
 - API-first design: every major capability is exposed through versioned APIs and events
 - Separation of concerns: knowledge learning, agent execution, and model training are independent pipelines
 - Memory as a platform layer: durable memory is a core capability distinct from model inference and model training
@@ -20,9 +21,18 @@ Private First. Cloud Optional. Vendor Neutral.
 
 ```mermaid
 flowchart TD
-    User[User] --> UI[Web UI]
-    UI --> APIGW[API Gateway]
-    UI --> Identity[Identity Service]
+    Continue[Continue.dev]
+    FutureClients[Future Assistant Clients]
+    AdminUI[Administration UI]
+
+    Continue --> AssistantAPI[Assistant API]
+    FutureClients --> AssistantAPI
+    AdminUI --> AdminAPI[Administration API]
+
+    AssistantAPI --> APIGW[API Gateway]
+    AdminAPI --> APIGW
+
+    AdminUI --> Identity[Identity Service]
     APIGW --> Identity
     APIGW --> Policy[Policy Service]
     APIGW --> Workspace[Workspace Service]
@@ -50,6 +60,9 @@ flowchart TD
     APIGW --> Training[Training Services]
     APIGW --> Ops[Deployment and Operations Service]
 
+    Workspace --> ProviderRegistry
+    Workspace --> ModelRegistry
+    Workspace --> PromptRegistry
     Workspace --> Knowledge
     Workspace --> Memory
     Policy --> Agent
@@ -88,6 +101,7 @@ flowchart TD
     Training --> RDB
     Training --> Kafka
     Training --> ModelRegistry
+    PromptRegistry --> Router
     PromptRegistry --> Agent
     PromptRegistry --> MemoryRetrieval
     ProviderRegistry --> Router
@@ -109,6 +123,8 @@ flowchart TD
     CloudModels --> DeepSeek[DeepSeek]
 
     APIGW --> Obs[Observability]
+    AssistantAPI --> Obs
+    AdminAPI --> Obs
     Identity --> Obs
     Policy --> Obs
     Memory --> Obs
@@ -132,11 +148,57 @@ flowchart TD
     Router --> Obs
 ```
 
+## Platform Surfaces
+
+OIP consists of two surfaces:
+
+1. Assistant API
+   Used by `Continue` first, and later by other assistant clients.
+2. Administration UI
+   Used by administrators to manage models, memory, knowledge, tools, providers, monitoring, and settings.
+
+The first validated integration is:
+
+```mermaid
+flowchart TD
+    Continue[Continue.dev]
+    AssistantAPI[OpenAI-Compatible Assistant API]
+    Runtime[OIP Runtime]
+    Router[Model Router]
+    Ollama[Ollama]
+
+    Continue --> AssistantAPI
+    AssistantAPI --> Runtime
+    Runtime --> Router
+    Router --> Ollama
+```
+
+This proves OIP can act as the intelligence backend for AI coding assistants while keeping provider control inside OIP.
+
 ## Component Responsibilities
 
-### Web UI
+### Administration UI
 
-Provides workspace management, chat, retrieval experiences, agent task execution, model selection preferences, and administration views for providers, models, memory, and MCP integrations. `Next.js` is a strong fit because it supports SSR, authenticated app experiences, and modular frontend growth.
+Provides administrative experiences for:
+
+- model aliases and routing
+- providers and health
+- memory browsing and retention
+- knowledge sources and indexing
+- tool enablement
+- monitoring and settings
+
+This surface is part of the architecture now, even though it is not part of the first validated runtime milestone.
+
+### Assistant API
+
+Provides the assistant-facing protocol boundary. The first supported contract is OpenAI-compatible:
+
+- `GET /v1/models`
+- `POST /v1/chat/completions`
+- `POST /v1/embeddings`
+
+This surface exists so assistant clients can integrate with OIP without depending directly on raw provider APIs.
 
 ### API Gateway
 
@@ -220,6 +282,8 @@ Selects the best provider and model for each task using policy, cost, latency, a
 
 Default policy should prefer local models first, then approved enterprise models, then optional cloud providers if policy allows.
 
+In the validated assistant flow, the router is already responsible for translating OIP-facing aliases into internal model choices.
+
 ### Provider Registry
 
 Maintains the catalog of configured providers, endpoints, capabilities, credentials references, health metadata, and allowed usage scopes. It allows enterprise teams to govern which providers are available in which environments and workspaces.
@@ -228,9 +292,20 @@ Maintains the catalog of configured providers, endpoints, capabilities, credenti
 
 Tracks available models, versions, context windows, capabilities, hosting mode, cost information, routing priority, evaluation status, promotion state, and release metadata. This is the control point for safe rollout and rollback of fine-tuned or newly approved models. Models are managed through the UI so new models can be added without code changes.
 
+Assistant clients should not see raw provider model names directly. They should see OIP aliases such as:
+
+- `oip-chat`
+- `oip-plan`
+- `oip-agent`
+- `oip-embed`
+
+The registry and router resolve those aliases internally.
+
 ### Prompt Registry
 
 Stores prompt templates, versions, usage constraints, review status, and release mappings. This supports repeatable prompt engineering and governance instead of unmanaged prompt sprawl.
+
+Prompt Registry also becomes the foundation for OIP runtime modes.
 
 ### Evaluation Service
 
@@ -281,6 +356,26 @@ Collects logs, metrics, traces, health signals, AI usage telemetry, and audit-co
 - It creates clear extension points for future products to consume knowledge, agents, routing, governance, and identity services.
 - It gives Delivery Wizard, PortalOps AI, EventEase AI, and WorkTime AI a reusable memory substrate without creating product-specific architectural branches.
 - It gives enterprise architects explicit platform services for policy, audit, evaluation, cost, and operations.
+
+## OIP Runtime Modes
+
+OIP supports runtime modes that are implemented through prompts and routing rather than complex orchestration in the first implementation:
+
+```text
+CHAT
+PLAN
+AGENT
+BACKGROUND
+```
+
+Initial intent:
+
+- `CHAT`: explanations and general interaction
+- `PLAN`: work breakdown, architecture planning, and reasoning
+- `AGENT`: coding-oriented execution style
+- `BACKGROUND`: reserved for future asynchronous work
+
+These modes sit between assistant requests and provider routing. They are an OIP runtime concern, not a provider concern and not a client concern.
 
 ## Component Diagram
 
